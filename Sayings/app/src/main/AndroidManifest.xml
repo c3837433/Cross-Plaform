@@ -23,6 +23,10 @@
             android:name=".LoginRegisterActivity"
             android:label="@string/title_activity_login_register" >
         </activity>
+        <activity
+            android:name=".SayingListActivity"
+            android:label="@string/title_activity_saying_list" >
+        </activity>
     </application>
 
 </manifest>

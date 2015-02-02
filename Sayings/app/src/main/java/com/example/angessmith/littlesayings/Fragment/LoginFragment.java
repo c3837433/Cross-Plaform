@@ -1,5 +1,7 @@
 package com.example.angessmith.littlesayings.Fragment;
 
+// Created by AngeSSmith on 2/2/15.
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;

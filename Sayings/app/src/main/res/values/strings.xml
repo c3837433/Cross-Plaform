@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_login_register">LoginRegisterActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_saying_list">SayingListActivity</string>
 
 </resources>

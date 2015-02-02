@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lt_blue"
+        android:orientation="vertical"
+        android:padding="20dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="Email Address"
+            android:theme="@android:style/Theme.Holo"
+            android:ems="10"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffe9e9e9"
+            android:selectAllOnFocus="false"
+            android:id="@+id/register_email"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:theme="@android:style/Theme.Holo"
+            android:hint="Password"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffe9e9e9"
+            android:ems="10"
+            android:id="@+id/register_password"
+            android:layout_marginBottom="15dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:theme="@android:style/Theme.Holo"
+            android:hint="Confirm Password"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffe9e9e9"
+            android:ems="10"
+            android:id="@+id/register_password_conf"
+            android:layout_marginBottom="15dp"/>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/dk_blue">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                android:textColor="@color/white"
+                android:id="@+id/register_user_button"
+                android:layout_gravity="center_horizontal"
+                android:textSize="18sp"
+                android:background="@null"/>
+        </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/register_cancel_button"
+            android:text="Return to Login"
+            android:background="@null"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -16,6 +16,7 @@ public class Launch extends Activity {
 
     public static final String TAG = "Launch";
     public static final int LOGIN_REGISTER_INTENT = 9212011;
+    public static final int LIST_INTENT = 10112001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,12 @@ public class Launch extends Activity {
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "N2wRnfGDdmtURsVA4IZfgXU5UdjREkHbQepbwxBv", "kUzQRnQ1mpbyVJ8rLnjbfUYUnIHYqTotnjstXcxu");
 
+        checkLogInAndSwitchViews();
+
+
+    }
+
+    private void checkLogInAndSwitchViews() {
         // Check network
         NetworkChecker networkChecker = new NetworkChecker(this);
         boolean canAccess = networkChecker.networkAvailable();
@@ -40,6 +47,8 @@ public class Launch extends Activity {
             if (currentUser != null) {
                 // user is logged in, move to saying list
                 Log.i(TAG, "User logged in");
+                Intent loggedInIntent = new Intent(this, SayingListActivity.class);
+                startActivityForResult(loggedInIntent, LIST_INTENT);
             } else {
                 // user needs to log in, move to login screen
                 Log.i(TAG, "User not logged in");
@@ -50,7 +59,15 @@ public class Launch extends Activity {
             // Unable to access internet, inform user
             Toast.makeText(this, "Please check your internet access.", Toast.LENGTH_LONG).show();
         }
+    }
 
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // in case user moves back here after resetting internet or pressing the back button
+        checkLogInAndSwitchViews();
     }
 
 }
