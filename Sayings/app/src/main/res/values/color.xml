@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="lt_green">#a5cf62</color>
+    <color name="dk_green">#8fc73e</color>
+    <color name="lt_blue">#5babc3</color>
+    <color name="dk_blue">#24798e</color>
+    <color name="lt_teal">#83d1df</color>
+    <color name="dk_teal">#2bbbac</color>
+    <color name="lt_orange">#faad6f</color>
+    <color name="dk_orange">#f89b4d</color>
+    <color name="lt_red">#f37d78</color>
+    <color name="dk_red">#f05a61</color>
+    <color name="white">#ffffff</color>
+</resources>
