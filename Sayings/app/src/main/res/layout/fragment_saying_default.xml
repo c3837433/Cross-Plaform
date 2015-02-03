@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dk_teal"
+    android:padding="20dp">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dk_teal"
+        android:orientation="vertical">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Child's Name"
+            android:theme="@android:style/Theme.Holo"
+            android:ems="10"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffe9e9e9"
+            android:selectAllOnFocus="false"
+            android:id="@+id/add_saying_name"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Child's Birthday"
+                android:textColor="#ffffff"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_my_calendar"
+                android:id="@+id/add_saying_user_birthday"
+                android:background="@null"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/add_saying_save_child"
+                android:text=""
+                android:textSize="24sp"
+                android:textColor="#ffffff"
+                android:theme="@android:style/Theme.Holo"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Save this child for future sayings?"
+                android:textColor="#ffffff"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/dk_blue">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Child's saying..."
+                android:id="@+id/add_saying_saying"
+                android:layout_marginTop="20dp"
+                android:theme="@android:style/Theme.Holo"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffe9e9e9"
+                android:selectAllOnFocus="false"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:textColor="@color/white"
+                android:id="@+id/add_save_saying_button"
+                android:layout_gravity="center_horizontal"
+                android:textSize="18sp"
+                android:background="@null"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

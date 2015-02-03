@@ -1,5 +1,6 @@
 package com.example.angessmith.littlesayings;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,9 +10,10 @@ import android.view.MenuItem;
 import com.parse.ParseUser;
 
 
-public class SayingListActivity extends ActionBarActivity {
+public class SayingListActivity extends ActionBarActivity  {
 
     public static final String TAG = SayingListActivity.TAG;
+    public static final int ADD_SAYING_INTENT = 62719;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,9 @@ public class SayingListActivity extends ActionBarActivity {
             case R.id.action_add_saying:
                 // User selected plus button
                 Log.i(TAG, "User wants to add a saying");
+                Intent intent = new Intent(this, AddSayingActivity.class);
+                // Add a request code to see if a saying was added
+                startActivityForResult(intent, ADD_SAYING_INTENT);
                 break;
 
             case R.id.action_logout_user:
@@ -47,4 +52,5 @@ public class SayingListActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

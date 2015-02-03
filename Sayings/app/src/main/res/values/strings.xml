@@ -8,5 +8,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_saying_list">SayingListActivity</string>
     <string name="title_activity_add_saying">Add Saying Activity</string>
+    <string name="title_activity_add_child">Add Child Activity</string>
 
 </resources>

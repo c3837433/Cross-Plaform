@@ -15,8 +15,6 @@ import com.example.angessmith.littlesayings.R;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener {
 
-
-
     // Create the tag
     public static final String TAG = "LoginFragment.TAG";
     // Set up the edit text views to get the entered data when user logs in
@@ -74,7 +72,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
             mListener = (OnRegisterFragmentButtonListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnRegisterFragmentButtonListener");
         }
     }
 

@@ -11,14 +11,7 @@ import java.util.Date;
 @ParseClassName("Saying")
 public class SayingObject  extends ParseObject{
 
-    // each saying will have a child, date, and saying
-    public void setChild(UserChild child) {
-        put("Child", child);
-    }
-
-    public UserChild getChildName() {
-        return (UserChild) get("Child");
-    }
+    // each saying will have a child name, date, age, and saying
 
     public void setDate(Date date) {
         put("SayingDate", date);
@@ -34,4 +27,23 @@ public class SayingObject  extends ParseObject{
     public String getSaying () {
         return getString("ChildSaying");
     }
+
+    public void setChild (String childName){
+        put("Name", childName);
+    }
+
+    public String getChild () {
+        return getString("Name");
+    }
+
+    public void setAge (Number childName){
+        put("Age", childName);
+    }
+
+    public Number getAge () {
+        return getNumber("Age");
+    }
+
+
+
 }

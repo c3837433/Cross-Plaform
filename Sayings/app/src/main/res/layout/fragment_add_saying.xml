@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dk_teal"
+    android:padding="20dp">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dk_teal"
+        android:orientation="vertical">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Child's Name"
+            android:theme="@android:style/Theme.Holo"
+            android:ems="10"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffe9e9e9"
+            android:selectAllOnFocus="false"
+            android:id="@+id/speaker_name"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:id="@+id/speaker_age"
+            android:hint="Age"
+            android:textColor="#ffffff"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Child's saying..."
+            android:id="@+id/speaker_saying"
+            android:layout_marginTop="20dp"
+            android:theme="@android:style/Theme.Holo"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffe9e9e9"
+            android:selectAllOnFocus="false"
+            android:inputType="textLongMessage" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:id="@+id/speaker_date"
+            android:hint="Date"
+            android:textColor="#ffffff"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_my_calendar"
+            android:id="@+id/speaker_get_date"
+            android:background="@null"/>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/dk_blue">
+
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:textColor="@color/white"
+                android:id="@+id/speaker_save_saying"
+                android:layout_gravity="center_horizontal"
+                android:textSize="18sp"
+                android:background="@null"/>
+        </LinearLayout>
+
+</LinearLayout>
