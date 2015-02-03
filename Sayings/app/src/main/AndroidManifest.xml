@@ -27,6 +27,10 @@
             android:name=".SayingListActivity"
             android:label="@string/title_activity_saying_list" >
         </activity>
+        <activity
+            android:name=".AddSayingActivity"
+            android:label="@string/title_activity_add_saying" >
+        </activity>
     </application>
 
 </manifest>

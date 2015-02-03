@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.angessmith.littlesayings.Fragment.LoginFragment;
 import com.example.angessmith.littlesayings.Fragment.RegisterFragment;
+import com.parse.LogInCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -43,6 +45,43 @@ public class LoginRegisterActivity extends Activity implements LoginFragment.OnF
     @Override
     public void verifyEnteredLogInCredentialsForLogIn(String email, String password) {
         Log.d(TAG, "User attempting to log in with " + email + " and password: " + password);
+        // make sure fields are not empty
+        if ((email.length() != 0) && (password.length() != 0)) {
+            // make sure we can still access parse
+            NetworkChecker networkChecker = new NetworkChecker(this);
+            boolean canStillAccess = networkChecker.networkAvailable();
+            if (canStillAccess) {
+                // attempt to log user in with credentials
+                ParseUser.logInInBackground(email, password, new LogInCallback() {
+                    public void done(ParseUser user, ParseException e) {
+                        if (e == null && user != null) {
+                            // We are logged in, return to the launch activity
+                            finish();
+                        } else {
+                            // If there is an error, alert the user
+                            if (e != null) {
+                                switch (e.getCode()) {
+                                    case 101:
+                                        // code 101 = email and password do not match
+                                        toastUser("Sorry, your email or password are incorrect.");
+                                        break;
+                                    default:
+                                        toastUser("Sorry, we are unable to log in right now, try again later.");
+                                        Log.d(TAG, " Code: " + e.getCode() + "Message: " + e.getMessage());
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                });
+
+            } else { // No longer have a network connection
+                toastUser("Please check your internet connection and try again.");
+            }
+        } else {
+            // one of the fields are blank
+            toastUser("Please enter both your email and password.");
+        }
     }
 
     @Override
@@ -100,6 +139,8 @@ public class LoginRegisterActivity extends Activity implements LoginFragment.OnF
             // set their email and password
             parseUser.setUsername(email);
             parseUser.setPassword(password);
+            // Restrict this user's information to this user only
+            parseUser.setACL(new ParseACL(parseUser));
             // sign them up
             parseUser.signUpInBackground(new SignUpCallback() {
                 @Override

@@ -2,11 +2,16 @@ package com.example.angessmith.littlesayings;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.parse.ParseUser;
+
 
 public class SayingListActivity extends ActionBarActivity {
+
+    public static final String TAG = SayingListActivity.TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +29,20 @@ public class SayingListActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId())
+        {
+            case R.id.action_add_saying:
+                // User selected plus button
+                Log.i(TAG, "User wants to add a saying");
+                break;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.action_logout_user:
+                Log.i(TAG, "Log out user and return to launch");
+                // log the user out
+                ParseUser.logOut();
+                finish();
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
         return super.onOptionsItemSelected(item);
