@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.example.angessmith.littlesayings.Fragment.LoginFragment;
 import com.example.angessmith.littlesayings.Fragment.RegisterFragment;
 import com.parse.LogInCallback;
-import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -139,8 +138,6 @@ public class LoginRegisterActivity extends Activity implements LoginFragment.OnF
             // set their email and password
             parseUser.setUsername(email);
             parseUser.setPassword(password);
-            // Restrict this user's information to this user only
-            parseUser.setACL(new ParseACL(parseUser));
             // sign them up
             parseUser.signUpInBackground(new SignUpCallback() {
                 @Override

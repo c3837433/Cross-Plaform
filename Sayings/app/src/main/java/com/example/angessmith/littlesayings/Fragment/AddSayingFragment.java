@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.angessmith.littlesayings.R;
 
- // Created by AngeSSmith on 2/3/15.
+import java.util.Calendar;
+
+// Created by AngeSSmith on 2/3/15.
 
 public class AddSayingFragment extends Fragment implements View.OnClickListener {
 
@@ -21,7 +24,8 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
     private EditText mNameView;
     private EditText mAgeView;
     private EditText mSayingView;
-    private EditText mDateView;
+    private TextView mDateView;
+    private Calendar mCalendarDate;
 
     // Define the listener interface
     private AddSayingButtonListener mListener;
@@ -56,7 +60,16 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
         mNameView = (EditText)view.findViewById(R.id.speaker_name);
         mAgeView = (EditText) view.findViewById(R.id.speaker_age);
         mSayingView = (EditText)view.findViewById(R.id.speaker_saying);
-        mDateView = (EditText) view.findViewById(R.id.speaker_date);
+        mDateView = (TextView) view.findViewById(R.id.speaker_date);
+
+        // get today's date
+        mCalendarDate = Calendar.getInstance();
+        int year = mCalendarDate.get(Calendar.YEAR);
+        int month = mCalendarDate.get(Calendar.MONTH) + 1; // to compensate for return error
+        int day = mCalendarDate.get(Calendar.DAY_OF_MONTH);
+        String date = month + "/" + day + "/" + year;
+        // set the date in the textview
+        mDateView.setText(date);
 
         // return the view
         return view;
@@ -85,7 +98,9 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
         // get what triggered the click
         switch (v.getId()) {
             case R.id.speaker_save_saying:
-                mListener.gatherEnteredData(mNameView.getText().toString(), mAgeView.getText().toString(), mSayingView.getText().toString(), mDateView.getText().toString());
+                // get the number entered in the age edit text view
+                Integer age = Integer.parseInt(mAgeView.getText().toString());
+                mListener.gatherEnteredData(mNameView.getText().toString(), age, mSayingView.getText().toString(), mDateView.getText().toString());
                 break;
             case R.id.speaker_get_date:
                 mListener.getDate();
@@ -95,7 +110,7 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
 
     public interface AddSayingButtonListener {
         // button methods
-        public void gatherEnteredData(String name, String age, String saying, String date);
+        public void gatherEnteredData(String name, Integer age, String saying, String date);
         public void getDate();
     }
 

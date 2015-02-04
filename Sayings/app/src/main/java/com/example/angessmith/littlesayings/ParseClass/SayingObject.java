@@ -2,6 +2,7 @@ package com.example.angessmith.littlesayings.ParseClass;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.Date;
 
@@ -36,12 +37,17 @@ public class SayingObject  extends ParseObject{
         return getString("Name");
     }
 
-    public void setAge (Number childName){
+    public void setAge (Integer childName){
         put("Age", childName);
     }
 
-    public Number getAge () {
-        return getNumber("Age");
+    public Integer getAge () {
+        return getInt("Age");
+    }
+
+    // Run query for objects
+    public static ParseQuery<SayingObject> getQuery() {
+        return ParseQuery.getQuery(SayingObject.class);
     }
 
 

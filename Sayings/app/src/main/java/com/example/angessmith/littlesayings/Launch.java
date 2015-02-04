@@ -9,7 +9,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.angessmith.littlesayings.ParseClass.SayingObject;
-import com.example.angessmith.littlesayings.ParseClass.UserChild;
 import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -26,19 +25,18 @@ public class Launch extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
 
-        // register the Parse subclasses
+        // register the Parse saying subclass
         ParseObject.registerSubclass(SayingObject.class);
-        ParseUser.registerSubclass(UserChild.class);
 
         // Set up font for launch logo
         TextView titleTextView = (TextView) findViewById(R.id.launch_logo_title);
         Typeface face = Typeface.createFromAsset(getAssets(),"fonts/giddyup.otf");
         titleTextView.setTypeface(face);
 
-        // Enable local data store and initialize this app with Parse
-        Parse.enableLocalDatastore(this);
+        // Initialize this app with Parse
         Parse.initialize(this, "N2wRnfGDdmtURsVA4IZfgXU5UdjREkHbQepbwxBv", "kUzQRnQ1mpbyVJ8rLnjbfUYUnIHYqTotnjstXcxu");
 
+        // Switch to whichever view is needed (Login/List)
         checkLogInAndSwitchViews();
 
 
