@@ -27,6 +27,9 @@
 		0EA6CFCB1A82B3260029B10F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EA6CFC21A82B3260029B10F /* SystemConfiguration.framework */; };
 		0EA6CFCD1A82B3320029B10F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EA6CFCC1A82B3320029B10F /* libz.dylib */; };
 		0EA6CFCF1A82B33A0029B10F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EA6CFCE1A82B33A0029B10F /* libsqlite3.dylib */; };
+		0EA6CFD21A82B6A90029B10F /* LogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFD11A82B6A90029B10F /* LogInViewController.m */; };
+		0EA6CFD51A82B6B70029B10F /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFD41A82B6B70029B10F /* SignUpViewController.m */; };
+		0EA6CFD81A82B6C20029B10F /* LaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +69,12 @@
 		0EA6CFC21A82B3260029B10F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0EA6CFCC1A82B3320029B10F /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		0EA6CFCE1A82B33A0029B10F /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		0EA6CFD01A82B6A90029B10F /* LogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogInViewController.h; sourceTree = "<group>"; };
+		0EA6CFD11A82B6A90029B10F /* LogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogInViewController.m; sourceTree = "<group>"; };
+		0EA6CFD31A82B6B70029B10F /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
+		0EA6CFD41A82B6B70029B10F /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
+		0EA6CFD61A82B6C20029B10F /* LaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LaunchViewController.h; sourceTree = "<group>"; };
+		0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaunchViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +111,9 @@
 		0EA6CF7F1A82AE520029B10F = {
 			isa = PBXGroup;
 			children = (
+				0EA6CFD61A82B6C20029B10F /* LaunchViewController.h */,
+				0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */,
+				0EA6CFD91A82BC070029B10F /* Log in/Sign up */,
 				0EA6CF8A1A82AE550029B10F /* Little Sayings */,
 				0EA6CFA41A82AE560029B10F /* Little SayingsTests */,
 				0EA6CFB91A82B2B10029B10F /* Frameworks */,
@@ -177,6 +189,17 @@
 				0EA6CFB61A82B2AB0029B10F /* Parse.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0EA6CFD91A82BC070029B10F /* Log in/Sign up */ = {
+			isa = PBXGroup;
+			children = (
+				0EA6CFD31A82B6B70029B10F /* SignUpViewController.h */,
+				0EA6CFD41A82B6B70029B10F /* SignUpViewController.m */,
+				0EA6CFD01A82B6A90029B10F /* LogInViewController.h */,
+				0EA6CFD11A82B6A90029B10F /* LogInViewController.m */,
+			);
+			name = "Log in/Sign up";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,9 +302,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EA6CFD21A82B6A90029B10F /* LogInViewController.m in Sources */,
+				0EA6CFD51A82B6B70029B10F /* SignUpViewController.m in Sources */,
 				0EA6CF941A82AE550029B10F /* ViewController.m in Sources */,
 				0EA6CF911A82AE550029B10F /* AppDelegate.m in Sources */,
 				0EA6CF8E1A82AE550029B10F /* main.m in Sources */,
+				0EA6CFD81A82B6C20029B10F /* LaunchViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,4 +26,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)logOutUser:(id)sender {
+    // Log user out of Parse
+    [PFUser logOut];
+    // Return to launch
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
+
 @end
