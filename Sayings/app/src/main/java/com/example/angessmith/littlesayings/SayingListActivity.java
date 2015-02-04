@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +15,19 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.angessmith.littlesayings.Fragment.DeleteSayingDialogFragment;
 import com.example.angessmith.littlesayings.ParseClass.SayingObject;
+import com.parse.DeleteCallback;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
+// Created by AngeSSmith on 2/3/15.
 
-public class SayingListActivity extends ActionBarActivity  {
+public class SayingListActivity extends ActionBarActivity implements DeleteSayingDialogFragment.ConfirmDeleteListener {
 
     public static final String TAG = SayingListActivity.TAG;
     public static final int ADD_SAYING_INTENT = 62719;
@@ -31,6 +37,7 @@ public class SayingListActivity extends ActionBarActivity  {
     // define the action mode for the long click to delete the item
 
     private ActionMode mActionMode;
+    private SayingObject mSelectedSaying;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +61,6 @@ public class SayingListActivity extends ActionBarActivity  {
         ListView sayingList = (ListView) findViewById(R.id.saying_list_view);
         sayingList.setAdapter(mAdapter);
 
-        // set up for the list view clicks
-
-
         // Prepare for an empty list
         LinearLayout emptyListLayout = (LinearLayout) findViewById(R.id.empty_list_view);
         sayingList.setEmptyView(emptyListLayout);
@@ -67,8 +71,8 @@ public class SayingListActivity extends ActionBarActivity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                SayingObject sayingObject = mAdapter.getItem(position);
-                Log.d(TAG, "User selected to view/edit: " + sayingObject.getChild());
+                SayingObject editSaying = mAdapter.getItem(position);
+                Log.d(TAG, "User selected to view/edit: " + editSaying.getChild());
 
             }
         });
@@ -81,8 +85,10 @@ public class SayingListActivity extends ActionBarActivity  {
                     // if it does, the user can interact with the one previously created
                     return false;
                 }
-                SayingObject deleteSaying = mAdapter.getItem(position);
-                Log.d(TAG, "User selected to delete: " + deleteSaying.getChild());
+                mSelectedSaying = mAdapter.getItem(position);
+                Log.d(TAG, "User selected to delete: " + mSelectedSaying.getChild());
+                // start the action mode
+                mActionMode = startActionMode(DeleteActionModeCallback);
 
                 return true;
             }
@@ -124,6 +130,24 @@ public class SayingListActivity extends ActionBarActivity  {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void DeleteSaying(SayingObject saying) {
+        // Delete the item
+        saying.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.d(TAG, "Object deleted");
+                    // reload the list view
+                    mAdapter.loadObjects();
+                } else {
+                    Log.d(TAG, "Problem deleting: " + e.getMessage());
+                }
+            }
+        });
     }
 
     private class CustomSayingAdapter extends ParseQueryAdapter<SayingObject> {
@@ -181,6 +205,7 @@ public class SayingListActivity extends ActionBarActivity  {
         Log.d(TAG, "User returned from add saying");
         // See if we need to update the list view
         if ((requestCode == ADD_SAYING_INTENT) && (resultCode == RESULT_OK)) {
+            Toast.makeText(this, "Saying saved!", Toast.LENGTH_LONG).show();
             Log.i(TAG, "Update List");
             // reload list
             mAdapter.loadObjects();
@@ -188,5 +213,44 @@ public class SayingListActivity extends ActionBarActivity  {
             Log.d(TAG, "There should be " + numberOfitems + " items listed");
         }
     }
+
+
+    private ActionMode.Callback DeleteActionModeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // inflate the delete saying action menu
+            MenuInflater menuInflater = mode.getMenuInflater();
+            menuInflater.inflate(R.menu.delete_saying, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            // check which button was clicked
+            if (item.getItemId() == R.id._menu_delete_saying) {
+                // Confirm the user wants to delete the saying
+                DeleteSayingDialogFragment deleteFragment = DeleteSayingDialogFragment.newInstance(mSelectedSaying);
+                deleteFragment.show(getFragmentManager(), DeleteSayingDialogFragment.TAG);
+                // close the action bar mode
+                mode.finish();
+            }
+
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            // delete the action mode for reuse
+            mActionMode = null;
+        }
+
+   };
+
+
 
 }

@@ -103,7 +103,7 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
                 mListener.gatherEnteredData(mNameView.getText().toString(), age, mSayingView.getText().toString(), mDateView.getText().toString());
                 break;
             case R.id.speaker_get_date:
-                mListener.getDate();
+                mListener.getDate(mDateView);
         }
     }
 
@@ -111,7 +111,7 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
     public interface AddSayingButtonListener {
         // button methods
         public void gatherEnteredData(String name, Integer age, String saying, String date);
-        public void getDate();
+        public void getDate(TextView textView);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.angessmith.littlesayings;
 
+// Created by Angela Smith for Cross Platform Mobile Development term 1502
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.angessmith.littlesayings.Fragment.AddSayingFragment;
@@ -26,7 +28,7 @@ import java.util.Date;
 public class AddSayingActivity extends ActionBarActivity implements AddSayingFragment.AddSayingButtonListener, DatePickerDialog.OnDateSetListener {
 
     public static final String TAG = "AddSayingActivity.TAG";
-
+    public TextView mDateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +70,11 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
         int month = monthOfYear +1;// Error handling with current calendar
         String dateInString = dayOfMonth + "-" + month + "-" + year;
+        String dateForView = month + "/" + dayOfMonth + "/" + year;
         Date date = convertToDateObject(sdf, dateInString);
         Log.d(TAG, "Date set: " + date);
-
+        // Update the text view
+        mDateTextView.setText(dateForView);
     }
 
     private Date convertToDateObject(SimpleDateFormat sdf, String dateInString) {
@@ -127,7 +131,9 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
     }
 
     @Override
-    public void getDate() {
+    public void getDate(TextView textView) {
+        // set the textview so we can update the date after the user changes it
+        mDateTextView = textView;
         // Open the date dialog for user to change the date
         DateDialogFragment dateDialogFragment = new DateDialogFragment();
         dateDialogFragment.show(getFragmentManager(), DateDialogFragment.TAG);

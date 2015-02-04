@@ -2,12 +2,9 @@
 <resources>
 
     <string name="app_name">Little Sayings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login_register">LoginRegisterActivity</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_saying_list">SayingListActivity</string>
-    <string name="title_activity_add_saying">Add Saying Activity</string>
-    <string name="title_activity_add_child">Add Child Activity</string>
+    <string name="title_activity_login_register">Little Sayings</string>
+    <string name="title_activity_saying_list">Saying List</string>
+    <string name="title_activity_add_saying">Add Saying</string>
 
 </resources>

@@ -13,6 +13,7 @@ import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+// Created by AngeSSmith on 2/2/15.
 
 public class Launch extends Activity {
 

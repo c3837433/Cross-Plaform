@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.angessmith.littlesayings.Fragment.LoginFragment;
 import com.example.angessmith.littlesayings.Fragment.RegisterFragment;
 import com.parse.LogInCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -144,8 +145,7 @@ public class LoginRegisterActivity extends Activity implements LoginFragment.OnF
                 public void done(ParseException e) {
                     // make sure we have no errors
                     if (e == null) {
-                        // return to the launch screen
-                        finish();
+                        setPermissionAndClose();
                     } else {
                         // see if they are already registered
                         switch (e.getCode()) {
@@ -167,5 +167,15 @@ public class LoginRegisterActivity extends Activity implements LoginFragment.OnF
 
     public void toastUser(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void setPermissionAndClose() {
+        // set the acl to the now current user
+        ParseUser user = ParseUser.getCurrentUser();
+        user.setACL(new ParseACL(user));
+        // save whenever we can
+        user.saveEventually();
+        // return to the launch screen
+        finish();
     }
 }
