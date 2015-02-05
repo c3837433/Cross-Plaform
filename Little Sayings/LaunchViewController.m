@@ -10,6 +10,7 @@
 #import <Parse/Parse.h>
 #import "LogInViewController.h"
 #import "ViewController.h"
+#import "SayingListViewController.h"
 
 
 @interface LaunchViewController ()
@@ -48,8 +49,13 @@
 -(void) presentMainSayingView {
     // User is logged in
     NSLog(@"User is logged in, view main feed");
-    ViewController* testVC = [self.storyboard instantiateViewControllerWithIdentifier:@"testVC"];
-    [self presentViewController:testVC animated:NO completion:nil];
+    // get the tableview nav controller
+    UINavigationController* navController = [self.storyboard instantiateViewControllerWithIdentifier:@"sayingNavControl"];
+    [self presentViewController:navController animated:NO completion:nil];
+    //SayingListViewController* sayingListVC = [self.storyboard instantiateViewControllerWithIdentifier:@"sayingListVC"];
+    //[self presentViewController:sayingListVC animated:NO completion:nil];
+    //ViewController* testVC = [self.storyboard instantiateViewControllerWithIdentifier:@"testVC"];
+    //[self presentViewController:testVC animated:NO completion:nil];
 }
 /*
 #pragma mark - Navigation

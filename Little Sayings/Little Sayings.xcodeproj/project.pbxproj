@@ -30,6 +30,10 @@
 		0EA6CFD21A82B6A90029B10F /* LogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFD11A82B6A90029B10F /* LogInViewController.m */; };
 		0EA6CFD51A82B6B70029B10F /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFD41A82B6B70029B10F /* SignUpViewController.m */; };
 		0EA6CFD81A82B6C20029B10F /* LaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */; };
+		0EA6CFDB1A82CA050029B10F /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EA6CFDA1A82CA050029B10F /* ParseUI.framework */; };
+		0EA6CFDE1A82CA6E0029B10F /* SayingListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFDD1A82CA6E0029B10F /* SayingListViewController.m */; };
+		0EA6CFE11A82CBCE0029B10F /* SayingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFE01A82CBCE0029B10F /* SayingCell.m */; };
+		0EA6CFE41A82E0EF0029B10F /* AddSayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFE31A82E0EF0029B10F /* AddSayingViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +79,13 @@
 		0EA6CFD41A82B6B70029B10F /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
 		0EA6CFD61A82B6C20029B10F /* LaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LaunchViewController.h; sourceTree = "<group>"; };
 		0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaunchViewController.m; sourceTree = "<group>"; };
+		0EA6CFDA1A82CA050029B10F /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "../../../Development/Parse/parse-library-1.6.2/ParseUI.framework"; sourceTree = "<group>"; };
+		0EA6CFDC1A82CA6E0029B10F /* SayingListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SayingListViewController.h; sourceTree = "<group>"; };
+		0EA6CFDD1A82CA6E0029B10F /* SayingListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SayingListViewController.m; sourceTree = "<group>"; };
+		0EA6CFDF1A82CBCE0029B10F /* SayingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SayingCell.h; sourceTree = "<group>"; };
+		0EA6CFE01A82CBCE0029B10F /* SayingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SayingCell.m; sourceTree = "<group>"; };
+		0EA6CFE21A82E0EF0029B10F /* AddSayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddSayingViewController.h; sourceTree = "<group>"; };
+		0EA6CFE31A82E0EF0029B10F /* AddSayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddSayingViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EA6CFDB1A82CA050029B10F /* ParseUI.framework in Frameworks */,
 				0EA6CFCF1A82B33A0029B10F /* libsqlite3.dylib in Frameworks */,
 				0EA6CFCD1A82B3320029B10F /* libz.dylib in Frameworks */,
 				0EA6CFC31A82B3260029B10F /* AudioToolbox.framework in Frameworks */,
@@ -111,6 +123,12 @@
 		0EA6CF7F1A82AE520029B10F = {
 			isa = PBXGroup;
 			children = (
+				0EA6CFE21A82E0EF0029B10F /* AddSayingViewController.h */,
+				0EA6CFE31A82E0EF0029B10F /* AddSayingViewController.m */,
+				0EA6CFDF1A82CBCE0029B10F /* SayingCell.h */,
+				0EA6CFE01A82CBCE0029B10F /* SayingCell.m */,
+				0EA6CFDC1A82CA6E0029B10F /* SayingListViewController.h */,
+				0EA6CFDD1A82CA6E0029B10F /* SayingListViewController.m */,
 				0EA6CFD61A82B6C20029B10F /* LaunchViewController.h */,
 				0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */,
 				0EA6CFD91A82BC070029B10F /* Log in/Sign up */,
@@ -174,6 +192,7 @@
 		0EA6CFB91A82B2B10029B10F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0EA6CFDA1A82CA050029B10F /* ParseUI.framework */,
 				0EA6CFCE1A82B33A0029B10F /* libsqlite3.dylib */,
 				0EA6CFCC1A82B3320029B10F /* libz.dylib */,
 				0EA6CFBA1A82B3260029B10F /* AudioToolbox.framework */,
@@ -304,6 +323,9 @@
 			files = (
 				0EA6CFD21A82B6A90029B10F /* LogInViewController.m in Sources */,
 				0EA6CFD51A82B6B70029B10F /* SignUpViewController.m in Sources */,
+				0EA6CFE11A82CBCE0029B10F /* SayingCell.m in Sources */,
+				0EA6CFE41A82E0EF0029B10F /* AddSayingViewController.m in Sources */,
+				0EA6CFDE1A82CA6E0029B10F /* SayingListViewController.m in Sources */,
 				0EA6CF941A82AE550029B10F /* ViewController.m in Sources */,
 				0EA6CF911A82AE550029B10F /* AppDelegate.m in Sources */,
 				0EA6CF8E1A82AE550029B10F /* main.m in Sources */,

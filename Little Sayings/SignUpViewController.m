@@ -46,8 +46,8 @@
             newUser.password = password;
             [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    // return all the way back to the launch screen
-                    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:NO completion:NULL];
+                    // set permission and return to launch
+                    [self setPermissionAndReturnToLaunch];
                 } else if (error) {
                     // check if code 101
                     if (error.code == 101) {
@@ -65,6 +65,16 @@
 -(void)alertUserWithTitle:(NSString*)title message:(NSString*)message {
     // Display alert to user
     [[[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+}
+
+-(void)setPermissionAndReturnToLaunch {
+    // set this new user's permission
+    PFUser *user = [PFUser currentUser];
+    user.ACL = [PFACL ACLWithUser:user];
+    [user saveEventually];
+    
+    // return all the way back to the launch screen
+    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:NO completion:NULL];
 }
 
 - (IBAction)cancelSignUp:(id)sender {
