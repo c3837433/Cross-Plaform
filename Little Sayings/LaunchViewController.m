@@ -9,7 +9,6 @@
 #import "LaunchViewController.h"
 #import <Parse/Parse.h>
 #import "LogInViewController.h"
-#import "ViewController.h"
 #import "SayingListViewController.h"
 
 
@@ -52,19 +51,6 @@
     // get the tableview nav controller
     UINavigationController* navController = [self.storyboard instantiateViewControllerWithIdentifier:@"sayingNavControl"];
     [self presentViewController:navController animated:NO completion:nil];
-    //SayingListViewController* sayingListVC = [self.storyboard instantiateViewControllerWithIdentifier:@"sayingListVC"];
-    //[self presentViewController:sayingListVC animated:NO completion:nil];
-    //ViewController* testVC = [self.storyboard instantiateViewControllerWithIdentifier:@"testVC"];
-    //[self presentViewController:testVC animated:NO completion:nil];
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -16,6 +16,7 @@ import com.example.angessmith.littlesayings.R;
 import java.util.Calendar;
 
 // Created by AngeSSmith on 2/3/15.
+// *** Github Repository Link https://github.com/c3837433/Cross-Plaform
 
 public class AddSayingFragment extends Fragment implements View.OnClickListener {
 
@@ -25,7 +26,6 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
     private EditText mAgeView;
     private EditText mSayingView;
     private TextView mDateView;
-    private Calendar mCalendarDate;
 
     // Define the listener interface
     private AddSayingButtonListener mListener;
@@ -63,7 +63,7 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
         mDateView = (TextView) view.findViewById(R.id.speaker_date);
 
         // get today's date
-        mCalendarDate = Calendar.getInstance();
+        Calendar mCalendarDate = Calendar.getInstance();
         int year = mCalendarDate.get(Calendar.YEAR);
         int month = mCalendarDate.get(Calendar.MONTH) + 1; // to compensate for return error
         int day = mCalendarDate.get(Calendar.DAY_OF_MONTH);

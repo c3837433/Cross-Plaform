@@ -1,7 +1,7 @@
 package com.example.angessmith.littlesayings;
 
-
- // Created by AngeSSmith on 2/2/15.
+// Created by AngeSSmith on 2/2/15.
+// *** Github Repository Link https://github.com/c3837433/Cross-Plaform
 
 import android.content.Context;
 import android.net.ConnectivityManager;

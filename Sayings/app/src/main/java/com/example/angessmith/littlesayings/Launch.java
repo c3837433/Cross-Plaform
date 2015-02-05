@@ -14,6 +14,8 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 // Created by AngeSSmith on 2/2/15.
+// *** Github Repository Link https://github.com/c3837433/Cross-Plaform
+
 
 public class Launch extends Activity {
 

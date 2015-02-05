@@ -9,7 +9,9 @@ import android.os.Bundle;
 
 import com.example.angessmith.littlesayings.ParseClass.SayingObject;
 
- // Created by AngeSSmith on 2/3/15.
+// Created by AngeSSmith on 2/3/15.
+// *** Github Repository Link https://github.com/c3837433/Cross-Plaform
+
 
 public class DeleteSayingDialogFragment extends DialogFragment {
 

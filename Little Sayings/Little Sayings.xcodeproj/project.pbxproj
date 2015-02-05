@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0EA6CF8E1A82AE550029B10F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CF8D1A82AE550029B10F /* main.m */; };
 		0EA6CF911A82AE550029B10F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CF901A82AE550029B10F /* AppDelegate.m */; };
-		0EA6CF941A82AE550029B10F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CF931A82AE550029B10F /* ViewController.m */; };
 		0EA6CF971A82AE550029B10F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EA6CF951A82AE550029B10F /* Main.storyboard */; };
 		0EA6CF991A82AE550029B10F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EA6CF981A82AE550029B10F /* Images.xcassets */; };
 		0EA6CF9C1A82AE550029B10F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EA6CF9A1A82AE550029B10F /* LaunchScreen.xib */; };
@@ -52,8 +51,6 @@
 		0EA6CF8D1A82AE550029B10F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0EA6CF8F1A82AE550029B10F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0EA6CF901A82AE550029B10F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		0EA6CF921A82AE550029B10F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		0EA6CF931A82AE550029B10F /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		0EA6CF961A82AE550029B10F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0EA6CF981A82AE550029B10F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		0EA6CF9B1A82AE550029B10F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -123,10 +120,7 @@
 		0EA6CF7F1A82AE520029B10F = {
 			isa = PBXGroup;
 			children = (
-				0EA6CFE21A82E0EF0029B10F /* AddSayingViewController.h */,
-				0EA6CFE31A82E0EF0029B10F /* AddSayingViewController.m */,
-				0EA6CFDF1A82CBCE0029B10F /* SayingCell.h */,
-				0EA6CFE01A82CBCE0029B10F /* SayingCell.m */,
+				0EA6CFE51A8309420029B10F /* Add Saying */,
 				0EA6CFDC1A82CA6E0029B10F /* SayingListViewController.h */,
 				0EA6CFDD1A82CA6E0029B10F /* SayingListViewController.m */,
 				0EA6CFD61A82B6C20029B10F /* LaunchViewController.h */,
@@ -153,8 +147,6 @@
 			children = (
 				0EA6CF8F1A82AE550029B10F /* AppDelegate.h */,
 				0EA6CF901A82AE550029B10F /* AppDelegate.m */,
-				0EA6CF921A82AE550029B10F /* ViewController.h */,
-				0EA6CF931A82AE550029B10F /* ViewController.m */,
 				0EA6CF951A82AE550029B10F /* Main.storyboard */,
 				0EA6CF981A82AE550029B10F /* Images.xcassets */,
 				0EA6CF9A1A82AE550029B10F /* LaunchScreen.xib */,
@@ -219,6 +211,17 @@
 				0EA6CFD11A82B6A90029B10F /* LogInViewController.m */,
 			);
 			name = "Log in/Sign up";
+			sourceTree = "<group>";
+		};
+		0EA6CFE51A8309420029B10F /* Add Saying */ = {
+			isa = PBXGroup;
+			children = (
+				0EA6CFE21A82E0EF0029B10F /* AddSayingViewController.h */,
+				0EA6CFE31A82E0EF0029B10F /* AddSayingViewController.m */,
+				0EA6CFDF1A82CBCE0029B10F /* SayingCell.h */,
+				0EA6CFE01A82CBCE0029B10F /* SayingCell.m */,
+			);
+			name = "Add Saying";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -326,7 +329,6 @@
 				0EA6CFE11A82CBCE0029B10F /* SayingCell.m in Sources */,
 				0EA6CFE41A82E0EF0029B10F /* AddSayingViewController.m in Sources */,
 				0EA6CFDE1A82CA6E0029B10F /* SayingListViewController.m in Sources */,
-				0EA6CF941A82AE550029B10F /* ViewController.m in Sources */,
 				0EA6CF911A82AE550029B10F /* AppDelegate.m in Sources */,
 				0EA6CF8E1A82AE550029B10F /* main.m in Sources */,
 				0EA6CFD81A82B6C20029B10F /* LaunchViewController.m in Sources */,

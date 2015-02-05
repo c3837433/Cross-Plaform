@@ -12,7 +12,16 @@
 
 @property (nonatomic, strong) IBOutlet UITextField* childNameView;
 @property (nonatomic, strong) IBOutlet UITextField* childAgeView;
+@property (nonatomic, strong) IBOutlet UITextField* childSayingDateView;
 @property (nonatomic, strong) IBOutlet UITextView* childSayingView;
-@property (nonatomic, strong) IBOutlet UILabel* childSayingDateLabel;
+
+-(void)updateDateLabelWithNewDate:(id)sender;
+
+#pragma mark SAYING CLASS KEYS
+#define aChildName  @"Name"
+#define aChildAge @"Age"
+#define aChildSaying @"ChildSaying"
+#define aChildSayingDate @"SayingDate"
+#define aSayingClass @"Saying"
 
 @end

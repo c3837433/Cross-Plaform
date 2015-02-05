@@ -11,7 +11,8 @@ import android.widget.EditText;
 
 import com.example.angessmith.littlesayings.R;
 
- // Created by AngeSSmith on 2/2/15.
+// Created by AngeSSmith on 2/2/15.
+// *** Github Repository Link https://github.com/c3837433/Cross-Plaform
 
 public class RegisterFragment extends Fragment implements View.OnClickListener {
 

@@ -51,6 +51,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma TABLEVIEW METHODS
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object
 {
     // Create a testing cell
@@ -62,6 +63,19 @@
         [cell setSaying:saying];
     }
     return cell;
+}
+
+// DELETE ITEM IN TABLEVIEW
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        PFObject* thisSaying = [self.objects objectAtIndex:indexPath.row];
+        [thisSaying deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                // reload objects
+                [self loadObjects];
+            }
+        }];
+    }
 }
 
 - (IBAction)logOutUser:(id)sender {

@@ -1,6 +1,7 @@
 package com.example.angessmith.littlesayings;
 
 // Created by Angela Smith for Cross Platform Mobile Development term 1502
+// *** Github Repository Link https://github.com/c3837433/Cross-Plaform
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
