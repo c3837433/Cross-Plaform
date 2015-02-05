@@ -121,8 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				0EA6CFE51A8309420029B10F /* Add Saying */,
-				0EA6CFDC1A82CA6E0029B10F /* SayingListViewController.h */,
-				0EA6CFDD1A82CA6E0029B10F /* SayingListViewController.m */,
+				0EA6CFE61A8332120029B10F /* Saying List */,
 				0EA6CFD61A82B6C20029B10F /* LaunchViewController.h */,
 				0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */,
 				0EA6CFD91A82BC070029B10F /* Log in/Sign up */,
@@ -218,10 +217,19 @@
 			children = (
 				0EA6CFE21A82E0EF0029B10F /* AddSayingViewController.h */,
 				0EA6CFE31A82E0EF0029B10F /* AddSayingViewController.m */,
+			);
+			name = "Add Saying";
+			sourceTree = "<group>";
+		};
+		0EA6CFE61A8332120029B10F /* Saying List */ = {
+			isa = PBXGroup;
+			children = (
+				0EA6CFDC1A82CA6E0029B10F /* SayingListViewController.h */,
+				0EA6CFDD1A82CA6E0029B10F /* SayingListViewController.m */,
 				0EA6CFDF1A82CBCE0029B10F /* SayingCell.h */,
 				0EA6CFE01A82CBCE0029B10F /* SayingCell.m */,
 			);
-			name = "Add Saying";
+			name = "Saying List";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

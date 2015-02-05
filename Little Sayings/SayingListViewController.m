@@ -56,7 +56,8 @@
 {
     // Create a testing cell
     SayingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"sayingCell"];
-    if (cell != nil)
+    //SayingCell* cell = [tableView dequeueReusableCellWithIdentifier:@"sayingCell" forIndexPath:indexPath];
+   if (cell != nil)
     {
         // Set the saying to the cell
         PFObject* saying = self.objects[indexPath.row];
@@ -78,11 +79,41 @@
     }
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // See what cell we are in
+    if (indexPath.row == self.objects.count) {
+        // This is a cell for the next row of items
+        return 40.0f;
+    } else {
+        // Get the current saying
+        PFObject* sayingObject = [self.objects objectAtIndex:indexPath.row];
+        // and the text of the saying
+        NSString* sayingText = [sayingObject objectForKey:aChildSaying];
+        // Define the label font
+        UIFont* font = [UIFont fontWithName:@"AvenirNext-Regular" size:14];
+        
+        // Get the width of the label by taking the cell and subtracting the side margins
+        CGFloat labelWidth = tableView.frame.size.width - 16;
+        // Create an attributed string from the text so we can create the shape
+        NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:sayingText attributes:@{NSFontAttributeName: font}];
+        // Create a rect that would fit the text label
+        CGRect labelRect = [attributedText boundingRectWithSize:(CGSize){labelWidth, CGFLOAT_MAX} options:NSStringDrawingUsesLineFragmentOrigin context:nil];
+        // Get the size, then the height
+        CGSize labelSize = labelRect.size;
+        labelSize.height = ceilf(labelSize.height);
+        // return the height needed for the label plus the base tableview cell height
+        return labelSize.height + 60;
+    }
+}
+
 - (IBAction)logOutUser:(id)sender {
     // Log user out of Parse
     [PFUser logOut];
     // Return to launch
     [self dismissViewControllerAnimated:NO completion:nil];
 }
+
+
+
 
 @end
