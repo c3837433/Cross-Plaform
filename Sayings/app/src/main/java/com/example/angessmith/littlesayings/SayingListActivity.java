@@ -2,6 +2,8 @@ package com.example.angessmith.littlesayings;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,10 +22,14 @@ import android.widget.Toast;
 import com.example.angessmith.littlesayings.Fragment.DeleteSayingDialogFragment;
 import com.example.angessmith.littlesayings.ParseClass.SayingObject;
 import com.parse.DeleteCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+
+import java.util.HashMap;
 
 // Created by AngeSSmith on 2/3/15.
 // *** Github Repository Link https://github.com/c3837433/Cross-Plaform
@@ -39,6 +45,8 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
 
     private ActionMode mActionMode;
     private SayingObject mSelectedSaying;
+    private static Handler mUpdateHandler;
+    Runnable mUpdateRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,26 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
         };
         // Set up the adapter
         mAdapter = new CustomSayingAdapter(this, adapter);
+
+        // and the handler
+        mUpdateHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle bundle = msg.getData();
+                String string = bundle.getString("update");
+                if (string.equals("YES")) {
+                    Log.d(TAG, "Need to update list");
+                    // reload list
+                    mAdapter.loadObjects();
+                } else {
+                    Log.d(TAG, "Don't need to update list");
+                }
+            }
+        };
+
+        // Start polling for new data
+        Log.d(TAG, "Starting handler updates");
+        attemptHandlerUpdate();
 
         // Get the list view and set the adapter to it
         ListView sayingList = (ListView) findViewById(R.id.saying_list_view);
@@ -94,11 +122,8 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
                 return true;
             }
         });
-
         // load  any objects available for this user
         mAdapter.loadObjects();
-        Integer numberOfitems = mAdapter.getCount();
-        Log.d(TAG, "There should be " + numberOfitems + " items listed");
     }
 
 
@@ -150,6 +175,7 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
             }
         });
     }
+
 
     private class CustomSayingAdapter extends ParseQueryAdapter<SayingObject> {
 
@@ -210,8 +236,6 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
             Log.i(TAG, "Update List");
             // reload list
             mAdapter.loadObjects();
-            Integer numberOfitems = mAdapter.getCount();
-            Log.d(TAG, "There should be " + numberOfitems + " items listed");
         }
     }
 
@@ -253,5 +277,68 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
    };
 
 
+    public void attemptHandlerUpdate() {
+        Log.d(TAG, "Starting Runnable");
+        mUpdateRunnable = new Runnable() {
+            public void run() {
+                // set the runnable to re run every 20 seconds
+                mUpdateHandler.postDelayed(this, 20000);
+                // Start looking for new or updated data
+                checkForUpdate();
+            }
+        };
+        // Start a new thread so we are not bogging down the app
+        Thread myThread = new Thread(mUpdateRunnable);
+        myThread.start();
+
+    }
+
+
+    public void checkForUpdate() {
+        Log.d(TAG, "Checking Update");
+        // Call method every 20 seconds to see if stories were added or updated for the user
+        ParseCloud.callFunctionInBackground("updateSaying", new HashMap<String, Object>(), new FunctionCallback<String>() {
+            public void done(String result, ParseException e) {
+                if (e == null) {
+                    // Method ran correctly
+                    Log.d(TAG, "Success");
+                    // Access the handler to sent the mesage
+                    Message msg = mUpdateHandler.obtainMessage();
+                    Bundle bundle = new Bundle();
+                    // pass the result string to the handler
+                    bundle.putString("update", result);
+                    msg.setData(bundle);
+                    mUpdateHandler.sendMessage(msg);
+                } else {
+                    toastUser("Error");
+                     Log.d(TAG, "Error: " + e.getMessage());
+                }
+            }
+        });
+
+    }
+
+
+    public void toastUser(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onPause() {
+       // stop the runnable
+       mUpdateHandler.removeCallbacks(mUpdateRunnable);
+       toastUser("Stopping updates");
+       super.onPause();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        // if already started
+       mUpdateHandler.removeCallbacks(mUpdateRunnable);
+       // resume the runnable
+       mUpdateHandler.postDelayed(mUpdateRunnable, 20000);
+        super.onResume();
+    }
 
 }
