@@ -114,6 +114,9 @@
 }
 
 
-
+-(void) viewWillAppear:(BOOL)animated {
+    // Set alll navigation text to white
+   [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+}
 
 @end

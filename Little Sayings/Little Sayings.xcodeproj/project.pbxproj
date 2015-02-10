@@ -29,10 +29,11 @@
 		0EA6CFD21A82B6A90029B10F /* LogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFD11A82B6A90029B10F /* LogInViewController.m */; };
 		0EA6CFD51A82B6B70029B10F /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFD41A82B6B70029B10F /* SignUpViewController.m */; };
 		0EA6CFD81A82B6C20029B10F /* LaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */; };
-		0EA6CFDB1A82CA050029B10F /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EA6CFDA1A82CA050029B10F /* ParseUI.framework */; };
 		0EA6CFDE1A82CA6E0029B10F /* SayingListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFDD1A82CA6E0029B10F /* SayingListViewController.m */; };
 		0EA6CFE11A82CBCE0029B10F /* SayingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFE01A82CBCE0029B10F /* SayingCell.m */; };
 		0EA6CFE41A82E0EF0029B10F /* AddSayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFE31A82E0EF0029B10F /* AddSayingViewController.m */; };
+		995686841A89D44900F7EA7D /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 995686831A89D44900F7EA7D /* DetailViewController.m */; };
+		99D3A2791A87EF6A00B83616 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99D3A2781A87EF6A00B83616 /* ParseUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,13 +77,15 @@
 		0EA6CFD41A82B6B70029B10F /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
 		0EA6CFD61A82B6C20029B10F /* LaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LaunchViewController.h; sourceTree = "<group>"; };
 		0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaunchViewController.m; sourceTree = "<group>"; };
-		0EA6CFDA1A82CA050029B10F /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "../../../Development/Parse/parse-library-1.6.2/ParseUI.framework"; sourceTree = "<group>"; };
 		0EA6CFDC1A82CA6E0029B10F /* SayingListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SayingListViewController.h; sourceTree = "<group>"; };
 		0EA6CFDD1A82CA6E0029B10F /* SayingListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SayingListViewController.m; sourceTree = "<group>"; };
 		0EA6CFDF1A82CBCE0029B10F /* SayingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SayingCell.h; sourceTree = "<group>"; };
 		0EA6CFE01A82CBCE0029B10F /* SayingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SayingCell.m; sourceTree = "<group>"; };
 		0EA6CFE21A82E0EF0029B10F /* AddSayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddSayingViewController.h; sourceTree = "<group>"; };
 		0EA6CFE31A82E0EF0029B10F /* AddSayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddSayingViewController.m; sourceTree = "<group>"; };
+		995686821A89D44900F7EA7D /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		995686831A89D44900F7EA7D /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		99D3A2781A87EF6A00B83616 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "../../../Dropbox/Parse/parse-library-1.6.2/ParseUI.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,7 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0EA6CFDB1A82CA050029B10F /* ParseUI.framework in Frameworks */,
+				99D3A2791A87EF6A00B83616 /* ParseUI.framework in Frameworks */,
 				0EA6CFCF1A82B33A0029B10F /* libsqlite3.dylib in Frameworks */,
 				0EA6CFCD1A82B3320029B10F /* libz.dylib in Frameworks */,
 				0EA6CFC31A82B3260029B10F /* AudioToolbox.framework in Frameworks */,
@@ -120,11 +123,14 @@
 		0EA6CF7F1A82AE520029B10F = {
 			isa = PBXGroup;
 			children = (
+				995686821A89D44900F7EA7D /* DetailViewController.h */,
+				995686831A89D44900F7EA7D /* DetailViewController.m */,
 				0EA6CFE51A8309420029B10F /* Add Saying */,
 				0EA6CFE61A8332120029B10F /* Saying List */,
 				0EA6CFD61A82B6C20029B10F /* LaunchViewController.h */,
 				0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */,
 				0EA6CFD91A82BC070029B10F /* Log in/Sign up */,
+				995686801A89BA4200F7EA7D /* Custom Font */,
 				0EA6CF8A1A82AE550029B10F /* Little Sayings */,
 				0EA6CFA41A82AE560029B10F /* Little SayingsTests */,
 				0EA6CFB91A82B2B10029B10F /* Frameworks */,
@@ -183,7 +189,7 @@
 		0EA6CFB91A82B2B10029B10F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0EA6CFDA1A82CA050029B10F /* ParseUI.framework */,
+				99D3A2781A87EF6A00B83616 /* ParseUI.framework */,
 				0EA6CFCE1A82B33A0029B10F /* libsqlite3.dylib */,
 				0EA6CFCC1A82B3320029B10F /* libz.dylib */,
 				0EA6CFBA1A82B3260029B10F /* AudioToolbox.framework */,
@@ -230,6 +236,13 @@
 				0EA6CFE01A82CBCE0029B10F /* SayingCell.m */,
 			);
 			name = "Saying List";
+			sourceTree = "<group>";
+		};
+		995686801A89BA4200F7EA7D /* Custom Font */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Custom Font";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -334,6 +347,7 @@
 			files = (
 				0EA6CFD21A82B6A90029B10F /* LogInViewController.m in Sources */,
 				0EA6CFD51A82B6B70029B10F /* SignUpViewController.m in Sources */,
+				995686841A89D44900F7EA7D /* DetailViewController.m in Sources */,
 				0EA6CFE11A82CBCE0029B10F /* SayingCell.m in Sources */,
 				0EA6CFE41A82E0EF0029B10F /* AddSayingViewController.m in Sources */,
 				0EA6CFDE1A82CA6E0029B10F /* SayingListViewController.m in Sources */,
@@ -461,14 +475,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/AngeSSmith/Development/Parse/parse-library-1.6.2",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "Little Sayings/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -476,14 +492,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/AngeSSmith/Development/Parse/parse-library-1.6.2",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "Little Sayings/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -540,6 +558,7 @@
 				0EA6CFAD1A82AE560029B10F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0EA6CFAE1A82AE560029B10F /* Build configuration list for PBXNativeTarget "Little SayingsTests" */ = {
 			isa = XCConfigurationList;
@@ -548,6 +567,7 @@
 				0EA6CFB01A82AE560029B10F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -29,6 +29,9 @@
     
     // [Optional] Track statistics around application opens.
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    UIBarButtonItem *barButtonAppearance = [UIBarButtonItem appearance];
+    [barButtonAppearance setTintColor:[UIColor whiteColor]];
     return YES;
 }
 
