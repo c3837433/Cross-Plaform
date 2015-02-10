@@ -106,6 +106,20 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+- (void)viewDetailsView:(DetailViewController *)controller didUpdateSaying:(BOOL)update
+{
+     NSLog(@"Returned from details");
+    if (update) {
+        NSLog(@"User updated item, refreshing list");
+        [self loadObjects];
+    }
+}
+
 - (IBAction)logOutUser:(id)sender {
     // Log user out of Parse
     [PFUser logOut];
@@ -118,5 +132,23 @@
     // Set alll navigation text to white
    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 }
+
+#pragma mark - Segue Methods
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UIButton*)sender
+{
+    if ([segue.identifier isEqualToString:@"segueToDetail"])
+    {
+        // Get this saying
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        
+        PFObject* saying = [self.objects objectAtIndex:indexPath.row];
+        DetailViewController* detailVC = segue.destinationViewController;
+        detailVC.delegate = self;
+        detailVC.thisSaying = saying;
+    }
+}
+
+
+
 
 @end

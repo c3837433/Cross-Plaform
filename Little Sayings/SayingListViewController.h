@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ParseUI/ParseUI.h"
+#import "DetailViewController.h"
 
-@interface SayingListViewController : PFQueryTableViewController
+@interface SayingListViewController : PFQueryTableViewController <DetailViewControllerDelegate>
 
 
 @end

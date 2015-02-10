@@ -9,7 +9,22 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 
-@interface DetailViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate>
+@class DetailViewController;
+@protocol DetailViewControllerDelegate <NSObject>
+// define the delegate method when we update an object
+- (void)viewDetailsView:(DetailViewController *)controller didUpdateSaying:(BOOL)update;
+@end
+
+
+@interface DetailViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate> {
+    UIBarButtonItem* editSayingButton;
+    UIBarButtonItem* cancelEditButton;
+    BOOL changedName;
+    BOOL changedDate;
+    BOOL changedAge;
+    BOOL changedSaying;
+}
+
 
 @property(nonatomic, strong) IBOutlet UIView* detailView;
 @property (nonatomic, strong) IBOutlet UIView* editView;
@@ -19,8 +34,13 @@
 @property (nonatomic, strong) IBOutlet UITextField* editAgeField;
 @property (nonatomic, strong) IBOutlet UITextField* editDateField;
 @property (nonatomic, strong) IBOutlet UITextView* editSayingView;
+@property (nonatomic, strong) IBOutlet UIButton* updateSayingButton;
+
+
 
 @property (nonatomic, strong) PFObject* thisSaying;
+// set up the delegate property
+@property (nonatomic, weak) id <DetailViewControllerDelegate> delegate;
 
 
 #pragma mark SAYING CLASS KEYS
