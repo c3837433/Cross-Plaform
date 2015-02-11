@@ -38,12 +38,18 @@
         [PFUser logInWithUsernameInBackground:email password:password
                                         block:^(PFUser *user, NSError *error) {
                                             if (user) {
-                                                // Move to main screen
-                                                [self dismissViewControllerAnimated:true completion:nil];
+                                                // make sure email is validated
+                                                [self checkEmailVerified:user];
+                                                
                                             } else {
-                                                // see what happened
-                                                NSLog(@"Error: %@", error.description);
-                                                [self alertUserWithTitle:@"Problem Logging In" message:@"Please try again."];
+                                                if (error.code == 101) {
+                                                    // Invalid Login credentials
+                                                    [self alertUserWithTitle:@"Email or Password are Incorrect" message:@"Please try again."];
+                                                } else {
+                                                    // see what happened
+                                                    NSLog(@"Error: %@", error.description);
+                                                    [self alertUserWithTitle:@"Problem Logging In" message:@"Please try again."];
+                                                }
                                             }
                                         }];
     }
@@ -52,6 +58,24 @@
 -(void)alertUserWithTitle:(NSString*)title message:(NSString*)message {
     // Display alert to user
     [[[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+}
+
+-(void)checkEmailVerified: (PFUser*) thisUser {
+    // for WEEK 2, assume email is verified
+    [self dismissViewControllerAnimated:true completion:nil];
+    /* WEEK 4 EMAIL VERIFICATION
+     // see if this user verified their email
+    BOOL verified = [thisUser objectForKey:@"emailVerified"];
+    if (!verified) {
+        // alert user
+        [self alertUserWithTitle:@"Email not Verified" message:@"Please verify your email and try again."];
+        // Log user out of Parse
+        [PFUser logOut];
+    } else {
+        // Move to main screen
+        [self dismissViewControllerAnimated:true completion:nil];
+    }
+     */
 }
 
 #pragma mark UITEXTFIELD DELEGATE

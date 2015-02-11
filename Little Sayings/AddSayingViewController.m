@@ -17,7 +17,7 @@
 @implementation AddSayingViewController
 @synthesize childAgeView, childNameView, childSayingView, childSayingDateView;
 
-
+#pragma VIEW CONTROLLER SET UP
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -84,17 +84,17 @@
     return [dateFormatter stringFromDate:[NSDate date]];
 }
 
+#pragma SAVE AND RETURN TO LIST METHODS
 -(IBAction)onSave:(UIButton*)sender {
     NSLog(@"Attempting to save saying");
-    // Get the values of the saying
+    // Get the values of the saying and the name
     NSString* saying = childSayingView.text;
-    // Make sure we have a saying
-    if (![saying isEqual:@""]) {
+    NSString* name = childNameView.text;
+    // Make sure we have a saying and a name
+    if ((![saying isEqual:@""]) && (![name isEqual:@""])) {
         // Gather the remaining
         // AGE
         NSInteger age = [childAgeView.text intValue];
-        // NAME
-        NSString* name = childNameView.text;
         
         // DATE
         NSString* dateString = childSayingDateView.text;
@@ -134,7 +134,7 @@
         
     } else {
         // alert the user we need a saying
-        [self alertUserWithTitle:@"No Saying" message:@"Please enter a saying to save."];
+        [self alertUserWithTitle:@"Missing field" message:@"Both a name and saying are required."];
     }
 
 }
@@ -150,6 +150,7 @@
     [self dismissViewControllerAnimated:NO completion:nil];
 
 }
+
 -(void)alertUserWithTitle:(NSString*)title message:(NSString*)message {
     // Display alert to user
     [[[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];

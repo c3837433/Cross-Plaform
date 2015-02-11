@@ -123,14 +123,10 @@
 		0EA6CF7F1A82AE520029B10F = {
 			isa = PBXGroup;
 			children = (
-				995686821A89D44900F7EA7D /* DetailViewController.h */,
-				995686831A89D44900F7EA7D /* DetailViewController.m */,
-				0EA6CFE51A8309420029B10F /* Add Saying */,
 				0EA6CFE61A8332120029B10F /* Saying List */,
-				0EA6CFD61A82B6C20029B10F /* LaunchViewController.h */,
-				0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */,
-				0EA6CFD91A82BC070029B10F /* Log in/Sign up */,
-				995686801A89BA4200F7EA7D /* Custom Font */,
+				0EA6CFE51A8309420029B10F /* Add Saying */,
+				9987C1781A8A9A2C00555A88 /* Detail and Edit Views */,
+				0EA6CFD91A82BC070029B10F /* Log in/Sign up/Launch */,
 				0EA6CF8A1A82AE550029B10F /* Little Sayings */,
 				0EA6CFA41A82AE560029B10F /* Little SayingsTests */,
 				0EA6CFB91A82B2B10029B10F /* Frameworks */,
@@ -207,15 +203,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0EA6CFD91A82BC070029B10F /* Log in/Sign up */ = {
+		0EA6CFD91A82BC070029B10F /* Log in/Sign up/Launch */ = {
 			isa = PBXGroup;
 			children = (
+				0EA6CFD61A82B6C20029B10F /* LaunchViewController.h */,
+				0EA6CFD71A82B6C20029B10F /* LaunchViewController.m */,
 				0EA6CFD31A82B6B70029B10F /* SignUpViewController.h */,
 				0EA6CFD41A82B6B70029B10F /* SignUpViewController.m */,
 				0EA6CFD01A82B6A90029B10F /* LogInViewController.h */,
 				0EA6CFD11A82B6A90029B10F /* LogInViewController.m */,
 			);
-			name = "Log in/Sign up";
+			name = "Log in/Sign up/Launch";
 			sourceTree = "<group>";
 		};
 		0EA6CFE51A8309420029B10F /* Add Saying */ = {
@@ -238,11 +236,13 @@
 			name = "Saying List";
 			sourceTree = "<group>";
 		};
-		995686801A89BA4200F7EA7D /* Custom Font */ = {
+		9987C1781A8A9A2C00555A88 /* Detail and Edit Views */ = {
 			isa = PBXGroup;
 			children = (
+				995686821A89D44900F7EA7D /* DetailViewController.h */,
+				995686831A89D44900F7EA7D /* DetailViewController.m */,
 			);
-			name = "Custom Font";
+			name = "Detail and Edit Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

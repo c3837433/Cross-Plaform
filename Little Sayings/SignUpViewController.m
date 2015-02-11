@@ -45,6 +45,8 @@
             PFUser* newUser = [PFUser user];
             newUser.username = email;
             newUser.password = password;
+            // add email for verification
+            newUser.email = email;
             [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
                     // set permission and return to launch
@@ -53,7 +55,7 @@
                     // check if code 101
                     if (error.code == 101) {
                         // This user is already registered
-                        [self alertUserWithTitle:@"Already Registered" message:@"This email has already been registeres."];
+                        [self alertUserWithTitle:@"Already Registered" message:@"This email has already been registered."];
                     } else {
                          [self alertUserWithTitle:@"Unable to Register" message:@"Please try again later."];
                     }
@@ -73,9 +75,15 @@
     PFUser *user = [PFUser currentUser];
     user.ACL = [PFACL ACLWithUser:user];
     [user saveEventually];
-    
+    // WEEK 2
+    [self alertUserWithTitle:@"Thanks for Registering!" message:@"You may now log in."];
+    // WEEK 4
+    // Display alert informing them of email validation
+    //[self alertUserWithTitle:@"Thanks for Registering!" message:@"You should be recieving an email to validate your account shortly. After validating you may log in."];
+    // Return to the log in screen
+    [self dismissViewControllerAnimated:NO completion:nil];
     // return all the way back to the launch screen
-    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:NO completion:NULL];
+    //[self.presentingViewController.presentingViewController dismissViewControllerAnimated:NO completion:NULL];
 }
 
 - (IBAction)cancelSignUp:(id)sender {

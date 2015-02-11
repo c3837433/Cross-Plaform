@@ -14,8 +14,7 @@
 
 
 #pragma mark - PARSE PFQUERY TABLEVIEW METHODS
-
-// Init for storyboards
+// INIT FOR STORYBOARD
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithClassName:@"Saying"];
@@ -30,7 +29,7 @@
     return self;
 }
 
-// Get any Saying stories
+//GET ALL SAYING STORIES FOR THIS USER
 - (PFQuery *)queryForTable {
     // Get all stories available for this current user
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
@@ -39,31 +38,35 @@
     return query;
 }
 
-
-- (void)viewDidLoad
+// PREPARE FOR EMPTY TABLE VIEW
+- (void)objectsDidLoad:(NSError *)error
 {
-    [super viewDidLoad];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [super objectsDidLoad:error];
+    if (self.objects.count == 0) {
+        // Display a message when the table is empty
+        UIImageView* messageImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+        messageImage.image = [UIImage imageNamed:@"noSaying"];
+        messageImage.contentMode = UIViewContentModeCenter;
+        self.tableView.backgroundView = messageImage;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
 }
 
 #pragma TABLEVIEW METHODS
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object
 {
-    // Create a testing cell
+    
+    // Get the saying cell
     SayingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"sayingCell"];
     //SayingCell* cell = [tableView dequeueReusableCellWithIdentifier:@"sayingCell" forIndexPath:indexPath];
-   if (cell != nil)
+    if (cell != nil)
     {
         // Set the saying to the cell
         PFObject* saying = self.objects[indexPath.row];
         [cell setSaying:saying];
     }
     return cell;
+    
 }
 
 // DELETE ITEM IN TABLEVIEW
@@ -106,11 +109,14 @@
     }
 }
 
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
+
+#pragma DETAIL VIEW CONTROLLER DELEGATE
 - (void)viewDetailsView:(DetailViewController *)controller didUpdateSaying:(BOOL)update
 {
      NSLog(@"Returned from details");
@@ -120,6 +126,7 @@
     }
 }
 
+#pragma LOG OUT USER
 - (IBAction)logOutUser:(id)sender {
     // Log user out of Parse
     [PFUser logOut];
@@ -127,11 +134,6 @@
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
-
--(void) viewWillAppear:(BOOL)animated {
-    // Set alll navigation text to white
-   [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
-}
 
 #pragma mark - Segue Methods
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UIButton*)sender
@@ -148,7 +150,21 @@
     }
 }
 
+#pragma VIEW CONTROLLER METHODS
+-(void) viewWillAppear:(BOOL)animated {
+    // Set alll navigation text to white
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+}
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+}
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 @end

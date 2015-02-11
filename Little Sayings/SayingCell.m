@@ -25,8 +25,14 @@
     // AGE
     if ([thisSaying objectForKey:aChildAge]) {
         // set in text view
+        NSString* ageString;
         int age = [[thisSaying objectForKey:aChildAge] intValue];
-        NSString* ageString = [NSString stringWithFormat:@"Age %d", age];
+        if (age == 0) {
+            ageString = @"Unknown";
+        } else {
+            ageString = [NSString stringWithFormat:@"Age %d", age];
+        }
+        
         childAgeLabel.text = ageString;
     }
     

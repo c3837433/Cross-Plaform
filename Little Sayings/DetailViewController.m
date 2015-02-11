@@ -57,9 +57,13 @@
     
     // AGE
     int age = [[thisSaying objectForKey:aChildAge] intValue];
-    NSString* ageString = [NSString stringWithFormat:@"Age %d", age];
+    NSString* sayingDetails;
+    if (age == 0) {
+        sayingDetails = [NSString stringWithFormat:@"At an unknown age, %@ said,\n      \"%@ \n\n %@", [thisSaying objectForKey:aChildName], [thisSaying objectForKey:aChildSaying], dateString];
+    } else {
+        sayingDetails = [NSString stringWithFormat:@"At age %d, %@ said,\n      \"%@ \n\n %@", age, [thisSaying objectForKey:aChildName], [thisSaying objectForKey:aChildSaying], dateString];
+    }
     
-    NSString* sayingDetails = [NSString stringWithFormat:@"At age %@, %@ said,\n      \"%@ \n\n %@", ageString, [thisSaying objectForKey:aChildName], [thisSaying objectForKey:aChildSaying], dateString];
     detailTextView.text = sayingDetails;
     editDateField.text = dateString;
     editAgeField.text = [NSString stringWithFormat:@"%d", age];
@@ -80,7 +84,7 @@
 
 
 -(void) userChangedField:(UITextField*)field {
-    // Display the button to update
+    // Display the button to allow saying update
     updateSayingButton.hidden = NO;
     // see what was changed
     switch (field.tag) {
