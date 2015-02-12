@@ -103,7 +103,7 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
             SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy");
             Date newDate = convertToDateObject(sdf, date);
             newSaying.setDate(newDate);
-
+            newSaying.put("Parent",ParseUser.getCurrentUser());
             // set the permission
             newSaying.setACL(new ParseACL(ParseUser.getCurrentUser()));
             // Save this saying

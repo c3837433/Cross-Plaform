@@ -111,6 +111,8 @@
         newSaying[aChildAge] = @(age);
         newSaying[aChildSaying] = saying;
         newSaying[aChildSayingDate] = sayingDate;
+        // also add the parent to the saying so the parse cloud code can check for updates
+        newSaying[@"Parent"] = [PFUser currentUser];
 
         // set read/write permission to current user
         newSaying.ACL = [PFACL ACLWithUser:[PFUser currentUser]];

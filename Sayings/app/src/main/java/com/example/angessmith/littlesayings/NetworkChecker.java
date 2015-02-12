@@ -17,11 +17,20 @@ public class NetworkChecker {
     }
 
     // See if the user has a working internet connection for Parse
-    public boolean networkAvailable () {
+    public  boolean networkAvailable ( ) {
         ConnectivityManager manager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         // Access the current network state
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         // return if have access and are connected
         return networkInfo != null && networkInfo.isConnected();
     }
+
+    public static boolean networkAvailability (Context context) {
+        ConnectivityManager manager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        // Access the current network state
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        // return if have access and are connected
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
 }

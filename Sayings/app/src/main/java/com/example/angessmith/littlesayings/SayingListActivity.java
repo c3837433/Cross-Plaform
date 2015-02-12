@@ -1,7 +1,10 @@
 package com.example.angessmith.littlesayings;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
@@ -41,12 +44,44 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
 
     // Define the Custom Adapter for the list
     CustomSayingAdapter mAdapter;
-    // define the action mode for the long click to delete the item
+    // define the action mode for the long click to delete the itemme@me.com
 
     private ActionMode mActionMode;
     private SayingObject mSelectedSaying;
     private static Handler mUpdateHandler;
     Runnable mUpdateRunnable;
+    boolean handlerRunning;
+
+    // define the broadcast receiver for connection status
+    private BroadcastReceiver networkReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isConnected = NetworkChecker.networkAvailability(context);
+            // For now just alert to check if connection is working
+            if (isConnected) {
+                toastUser("Network connection found");
+                // start checking for updates
+                // if already started do nothing
+                if (!handlerRunning) {
+                    toastUser("Resuming saying synchronization.");
+                    // refresh the list since is was likely past the 20 second mark
+                    mAdapter.loadObjects();
+                    // resume the runnable
+                    mUpdateHandler.postDelayed(mUpdateRunnable, 20000);
+                }
+            } else {
+                toastUser("No connection found, saying synchronization paused.");
+                // stop the handler
+                mUpdateHandler.removeCallbacks(mUpdateRunnable);
+                handlerRunning = false;
+            }
+
+        }
+    };
+
+    // set the receiver to listen for network changes
+    private IntentFilter networkFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +116,12 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
                 }
             }
         };
-
         // Start polling for new data
         Log.d(TAG, "Starting handler updates");
         attemptHandlerUpdate();
+
+        // register the network receiver
+        registerReceiver(networkReceiver, networkFilter);
 
         // Get the list view and set the adapter to it
         ListView sayingList = (ListView) findViewById(R.id.saying_list_view);
@@ -279,6 +316,7 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
 
     public void attemptHandlerUpdate() {
         Log.d(TAG, "Starting Runnable");
+        handlerRunning = true;
         mUpdateRunnable = new Runnable() {
             public void run() {
                 // set the runnable to re run every 20 seconds
@@ -310,8 +348,8 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
                     msg.setData(bundle);
                     mUpdateHandler.sendMessage(msg);
                 } else {
-                    toastUser("Error");
-                     Log.d(TAG, "Error: " + e.getMessage());
+                    //toastUser("Error");
+                    Log.d(TAG, "Error: " + e.getMessage());
                 }
             }
         });
@@ -328,6 +366,7 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
        // stop the runnable
        mUpdateHandler.removeCallbacks(mUpdateRunnable);
        toastUser("Stopping updates");
+        handlerRunning = false;
        super.onPause();
     }
 
@@ -338,7 +377,17 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
        mUpdateHandler.removeCallbacks(mUpdateRunnable);
        // resume the runnable
        mUpdateHandler.postDelayed(mUpdateRunnable, 20000);
+        handlerRunning = true;
         super.onResume();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "Stopping receiver");
+        unregisterReceiver(networkReceiver);
+
+    }
+
 
 }
