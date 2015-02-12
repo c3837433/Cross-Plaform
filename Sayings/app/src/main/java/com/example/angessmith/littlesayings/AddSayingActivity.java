@@ -17,8 +17,11 @@ import android.widget.Toast;
 import com.example.angessmith.littlesayings.Fragment.AddSayingFragment;
 import com.example.angessmith.littlesayings.Fragment.DateDialogFragment;
 import com.example.angessmith.littlesayings.ParseClass.SayingObject;
+import com.parse.GetCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -36,8 +39,16 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_saying);
 
+        String objectID = null;
+        // if this is an edit of a current item,get the id and change the title bar
+        if (getIntent().hasExtra("SayingId")) {
+            objectID = getIntent().getExtras().getString("SayingId");
+            // update the action bar
+            getSupportActionBar().setTitle("Edit Saying");
+        }
+
         // set up the add saying fragment
-        AddSayingFragment addSayingFragment = AddSayingFragment.newInstance();
+        AddSayingFragment addSayingFragment = AddSayingFragment.newInstance(objectID);
         getFragmentManager().beginTransaction().replace(R.id.add_saying_container, addSayingFragment, AddSayingFragment.TAG).commit();
 
 
@@ -91,38 +102,33 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
 
     // ADD SAYING BUTTON INTERFACE LISTENERS
     @Override
-    public void gatherEnteredData(String name, Integer age, String saying, String date) {
+    public void gatherEnteredData(String sayingId, final String name, final Integer age, final String saying, final String date) {
         Log.d(TAG, "User entered name: " + name + " age: " + age + " saying: " + saying + " on date: " + date);
+
         // Make sure we at least have a saying
         if (saying.length() != 0) {
-            // Save what we have from the user
-            SayingObject newSaying = new SayingObject();
-            newSaying.setSaying(saying);
-            newSaying.setAge(age);
-            newSaying.setChild(name);
-            SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy");
-            Date newDate = convertToDateObject(sdf, date);
-            newSaying.setDate(newDate);
-            newSaying.put("Parent",ParseUser.getCurrentUser());
-            // set the permission
-            newSaying.setACL(new ParseACL(ParseUser.getCurrentUser()));
-            // Save this saying
-            newSaying.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        // return to the list view
-                        Log.d(TAG, "Saying saved!");
-                        returnToListView();
-                    } else {
-                        Log.d(TAG, "Problem saving: " + e.getMessage());
-                        toastUser("We had a problem saving this saying. Please try again later.");
+            if (sayingId != null) {
+                // this is old, search for it
+                ParseQuery<SayingObject> query = SayingObject.getQuery();
+                // get the saying
+                query.getInBackground(sayingId, new GetCallback<SayingObject>() {
+                    public void done(SayingObject sayingObject, ParseException e) {
+                        if (e == null) {
+                            Log.d(TAG, "Retrieved object for update");
+                            saveSaying(sayingObject, name, saying, age, date);
+                        }
                     }
+                });
+            } else  {
+                // Save what we have from the user
+                SayingObject newSaying = new SayingObject();
+                Log.d(TAG, "Preparing new saying");
+                newSaying.put("Parent",ParseUser.getCurrentUser());
+                // set the permission
+                newSaying.setACL(new ParseACL(ParseUser.getCurrentUser()));
+                saveSaying(newSaying, name, saying, age, date);
 
-                }
-            });
-
-
+            }
 
         } else {
             // No saying
@@ -131,9 +137,34 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
 
     }
 
+    public void saveSaying(SayingObject thisSaying, String name, String saying, Integer age, String date ) {
+        Log.d(TAG, "Saving object");
+        thisSaying.setSaying(saying);
+        thisSaying.setAge(age);
+        thisSaying.setChild(name);
+        SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy");
+        Date newDate = convertToDateObject(sdf, date);
+        thisSaying.setDate(newDate);
+        // Save this saying
+        thisSaying.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    // return to the list view
+                    Log.d(TAG, "Saying saved!");
+                    returnToListView();
+                } else {
+                    Log.d(TAG, "Problem saving: " + e.getCode());
+                    toastUser("We had a problem saving this saying. Please try again later.");
+                }
+
+            }
+        });
+
+    }
     @Override
     public void getDate(TextView textView) {
-        // set the textview so we can update the date after the user changes it
+        // set the text view so we can update the date after the user changes it
         mDateTextView = textView;
         // Open the date dialog for user to change the date
         DateDialogFragment dateDialogFragment = new DateDialogFragment();

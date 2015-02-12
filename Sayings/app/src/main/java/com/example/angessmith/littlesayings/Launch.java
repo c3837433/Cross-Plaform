@@ -1,8 +1,12 @@
 package com.example.angessmith.littlesayings;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -33,11 +37,13 @@ public class Launch extends Activity {
 
         // Set up font for launch logo
         TextView titleTextView = (TextView) findViewById(R.id.launch_logo_title);
-        Typeface face = Typeface.createFromAsset(getAssets(),"fonts/giddyup.otf");
+        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/giddyup.otf");
         titleTextView.setTypeface(face);
 
         // Initialize this app with Parse
         Parse.initialize(this, "N2wRnfGDdmtURsVA4IZfgXU5UdjREkHbQepbwxBv", "kUzQRnQ1mpbyVJ8rLnjbfUYUnIHYqTotnjstXcxu");
+        // register the network receiver
+        registerReceiver(networkReceiver, networkFilter);
 
         // Switch to whichever view is needed (Login/List)
         checkLogInAndSwitchViews();
@@ -70,7 +76,6 @@ public class Launch extends Activity {
     }
 
 
-
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -78,4 +83,40 @@ public class Launch extends Activity {
         checkLogInAndSwitchViews();
     }
 
+    private BroadcastReceiver networkReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isConnected = NetworkChecker.networkAvailability(context);
+            // see if we are connected
+            if (isConnected) {
+                checkLogInAndSwitchViews();
+            } else {
+                // display text alerting user we need wifi
+                toastUser();
+            }
+        }
+    };
+
+    private void toastUser() {
+        Toast.makeText(this, "A network connection is required", Toast.LENGTH_SHORT).show();
+    }
+    // set the receiver to listen for network changes
+    private IntentFilter networkFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "Stopping receiver");
+        unregisterReceiver(networkReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "Re starting receiver");
+        registerReceiver(networkReceiver, networkFilter);
+        super.onResume();
+    }
+
 }
+
+

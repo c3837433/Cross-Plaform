@@ -1,5 +1,6 @@
 package com.example.angessmith.littlesayings;
 
+import android.app.LauncherActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,14 +26,18 @@ import android.widget.Toast;
 import com.example.angessmith.littlesayings.Fragment.DeleteSayingDialogFragment;
 import com.example.angessmith.littlesayings.ParseClass.SayingObject;
 import com.parse.DeleteCallback;
+import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.HashMap;
+import java.util.List;
 
 // Created by AngeSSmith on 2/3/15.
 // *** Github Repository Link https://github.com/c3837433/Cross-Plaform
@@ -41,6 +46,7 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
 
     public static final String TAG = SayingListActivity.TAG;
     public static final int ADD_SAYING_INTENT = 62719;
+    public static final int EDIT_SAYING_INTENT = 20908;
 
     // Define the Custom Adapter for the list
     CustomSayingAdapter mAdapter;
@@ -59,18 +65,18 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
             boolean isConnected = NetworkChecker.networkAvailability(context);
             // For now just alert to check if connection is working
             if (isConnected) {
-                toastUser("Network connection found");
+               // toastUser("Network connection found");
                 // start checking for updates
                 // if already started do nothing
                 if (!handlerRunning) {
-                    toastUser("Resuming saying synchronization.");
+                    toastUser("Sayings syncing.");
                     // refresh the list since is was likely past the 20 second mark
                     mAdapter.loadObjects();
                     // resume the runnable
                     mUpdateHandler.postDelayed(mUpdateRunnable, 20000);
                 }
             } else {
-                toastUser("No connection found, saying synchronization paused.");
+                toastUser("No connection found, sayings will not sync.");
                 // stop the handler
                 mUpdateHandler.removeCallbacks(mUpdateRunnable);
                 handlerRunning = false;
@@ -93,6 +99,7 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
             public ParseQuery<SayingObject> create() {
                 // Search for the SayingObject class
                 ParseQuery<SayingObject> query = SayingObject.getQuery();
+                query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
                 // put the newest ones first
                 query.orderByDescending("createdAt");
                 return query;
@@ -139,7 +146,8 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
                                     int position, long id) {
                 SayingObject editSaying = mAdapter.getItem(position);
                 Log.d(TAG, "User selected to view/edit: " + editSaying.getChild());
-
+                // re open the add saying view to edit the item
+                openAddSayingToEditItem(editSaying);
             }
         });
 
@@ -163,7 +171,14 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
         mAdapter.loadObjects();
     }
 
+    private void openAddSayingToEditItem(SayingObject object) {
+        Intent intent = new Intent(this, AddSayingActivity.class);
+        // pass along the object id
+        String idString = object.getObjectId();
+        intent.putExtra("SayingId", idString);
+        startActivityForResult(intent, EDIT_SAYING_INTENT);
 
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -194,7 +209,6 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
 
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void DeleteSaying(SayingObject saying) {
@@ -273,6 +287,8 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
             Log.i(TAG, "Update List");
             // reload list
             mAdapter.loadObjects();
+        } else if (requestCode == Launch.LIST_INTENT) {
+          //  loadFromParse();
         }
     }
 
@@ -365,8 +381,9 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
     protected void onPause() {
        // stop the runnable
        mUpdateHandler.removeCallbacks(mUpdateRunnable);
-       toastUser("Stopping updates");
+       //toastUser("Stopping updates");
         handlerRunning = false;
+        unregisterReceiver(networkReceiver);
        super.onPause();
     }
 
@@ -378,13 +395,15 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
        // resume the runnable
        mUpdateHandler.postDelayed(mUpdateRunnable, 20000);
         handlerRunning = true;
+        //Log.d(TAG, "Restarting receiver");
+        registerReceiver(networkReceiver, networkFilter);
         super.onResume();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "Stopping receiver");
+        //Log.d(TAG, "Stopping receiver");
         unregisterReceiver(networkReceiver);
 
     }
