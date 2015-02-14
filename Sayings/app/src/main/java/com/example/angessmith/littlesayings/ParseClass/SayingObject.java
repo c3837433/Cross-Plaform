@@ -45,6 +45,14 @@ public class SayingObject  extends ParseObject{
         return getInt("Age");
     }
 
+    public void setNew (Boolean isNew){
+        put("IsNew", isNew);
+    }
+
+    public boolean getIsNew() {
+        return getBoolean("IsNew");
+    }
+
     // Run query for objects
     public static ParseQuery<SayingObject> getQuery() {
         return ParseQuery.getQuery(SayingObject.class);

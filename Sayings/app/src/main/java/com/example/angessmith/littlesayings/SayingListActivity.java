@@ -30,7 +30,6 @@ import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
@@ -72,9 +71,8 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
                 // if already started do nothing
                 if (!handlerRunning) {
                    toastUser("Syncing Sayings");
-                    //syncSayings();
-                    // refresh the list since is was likely past the 20 second mark
-                    mSayingListAdapter.loadObjects();
+                    // sync what we have with what is on parse
+                    pullSayingsFromParse();
                     // resume the runnable
                     mUpdateHandler.postDelayed(mUpdateRunnable, 20000);
                 }
@@ -124,7 +122,8 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
                 if (string.equals("YES")) {
                     Log.d(TAG, "Need to update list");
                     // reload list
-                    mSayingListAdapter.loadObjects();
+                    pullSayingsFromParse();
+                    //mSayingListAdapter.loadObjects();
                 } else {
                     Log.d(TAG, "Don't need to update list");
                 }
@@ -181,14 +180,7 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
         pullSayingsFromParse();
     }
 
-    private void openAddSayingToEditItem(SayingObject object) {
-        Intent intent = new Intent(this, AddSayingActivity.class);
-        // pass along the object id
-        String idString = object.getObjectId();
-        intent.putExtra("SayingId", idString);
-        startActivityForResult(intent, EDIT_SAYING_INTENT);
-
-    }
+    // MENU METHODS
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -209,7 +201,11 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
                 break;
             case R.id.action_sync_saying:
                 // User selected sync, reload table
-                mSayingListAdapter.loadObjects();
+                if (isConnected) {
+                    pullSayingsFromParse();
+                } else {
+                    mSayingListAdapter.loadObjects();
+                }
                 break;
 
             case R.id.action_logout_user:
@@ -219,7 +215,7 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
                 // empty the list
                 mSayingListAdapter.clear();
                 // and remove all pins
-                ParseObject.unpinAllInBackground();
+                SayingObject.unpinAllInBackground();
                 finish();
             default:
                 return super.onOptionsItemSelected(item);
@@ -228,58 +224,6 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void DeleteSaying(SayingObject saying) {
-        // see if we are connected
-        if (isConnected) {
-            // Delete the item
-            saying.deleteInBackground(new DeleteCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Log.d(TAG, "Object deleted");
-                        // reload the list view
-                        mSayingListAdapter.loadObjects();
-                        toastUser("Saying deleted.");
-                    } else {
-                        Log.d(TAG, "Problem deleting: " + e.getMessage());
-                    }
-                }
-            });
-        } else {
-            // delete when we can
-            saying.deleteEventually();
-            mSayingListAdapter.loadObjects();
-            toastUser("Saying removed.");
-        }
-    }
-
-    private void pullSayingsFromParse() {
-        // get all saying objects for this user
-        ParseQuery<SayingObject> query = SayingObject.getQuery();
-        query.findInBackground(new FindCallback<SayingObject>() {
-            public void done(List<SayingObject> sayings, ParseException e) {
-                if (e == null) {
-                    // pin them to the local data store
-                    ParseObject.pinAllInBackground( sayings,
-                            new SaveCallback() {
-                                public void done(ParseException e) {
-                                    if (e == null) {
-                                        if (!isFinishing()) {
-                                            // load the objects into the list view
-                                            mSayingListAdapter.loadObjects();
-                                        }
-                                    } else {
-                                        Log.i(TAG, "Error pinning sayings: " + e.getMessage());
-                                    }
-                                }
-                            });
-                } else {
-                    Log.i(TAG, "Error pulling sayings:  " + e.getMessage());
-                }
-            }
-        });
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -311,9 +255,8 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
         }
     }
 
-    private void reloadSayingsList() {
-        mSayingListAdapter.loadObjects();
-    }
+
+    //  DELETE  ITEM METHODS
     private ActionMode.Callback DeleteActionModeCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -350,7 +293,34 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
 
     };
 
+    @Override
+    public void DeleteSaying(SayingObject saying) {
+        // see if we are connected
+        if (isConnected) {
+            // Delete the item
+            saying.deleteInBackground(new DeleteCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Log.d(TAG, "Object deleted");
+                        // reload the list view
+                        mSayingListAdapter.loadObjects();
+                        toastUser("Saying deleted.");
+                    } else {
+                        Log.d(TAG, "Problem deleting: " + e.getMessage() + e.getCode());
+                    }
+                }
+            });
+        } else {
+            // delete when we can
+            saying.deleteEventually();
+            mSayingListAdapter.loadObjects();
+            toastUser("Saying removed.");
+        }
+    }
 
+
+    // RUNNABLE FOR PARSE CLOUD METHODS WITH BROADCAST RECEIVER
     public void attemptHandlerUpdate() {
         Log.d(TAG, "Starting Runnable");
         handlerRunning = true;
@@ -365,7 +335,6 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
         // Start a new thread so we are not bogging down the app
         Thread myThread = new Thread(mUpdateRunnable);
         myThread.start();
-
     }
 
 
@@ -385,7 +354,6 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
                     msg.setData(bundle);
                     mUpdateHandler.sendMessage(msg);
                 } else {
-                    //toastUser("Error");
                     Log.d(TAG, "Error: " + e.getMessage());
                 }
             }
@@ -393,10 +361,6 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
 
     }
 
-
-    public void toastUser(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     protected void onPause() {
@@ -422,6 +386,7 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
     }
 
 
+    // ADAPTER
     private class SayingListAdapter extends ParseQueryAdapter<SayingObject> {
 
         public SayingListAdapter(Context context, ParseQueryAdapter.QueryFactory<SayingObject> queryFactory) {
@@ -480,6 +445,102 @@ public class SayingListActivity extends ActionBarActivity implements DeleteSayin
         TextView childAgeView;
         TextView childSayingDateView;
         TextView childSayingView;
+    }
+
+    // SYNCHRONIZATION METHODS
+    private void pullSayingsFromParse() {
+        // get all saying objects for this user
+        Log.d(TAG, "pulling all sayings from parse");
+        ParseQuery<SayingObject> query = SayingObject.getQuery();
+        query.findInBackground(new FindCallback<SayingObject>() {
+            public void done(final List<SayingObject> sayings, ParseException e) {
+                if (e == null) {
+                    // If they came from parse, make sure they are set to is new as false
+                    for (final SayingObject sayingObject : sayings) {
+                        if (sayingObject.getIsNew()) {
+                            Log.d(TAG, "Updating save eventually isnew variables to false");
+                            // change to false
+                            sayingObject.setNew(false);
+                            // update the object
+                            sayingObject.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e != null) {
+                                        sayingObject.setNew(true);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    //  When done pin them to the local data store
+                    //pinNewSayings(sayings);
+                    removeOldDataFromDataStore(sayings);
+
+                } else {
+                    Log.i(TAG, "Error pulling sayings:  " + e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void removeOldDataFromDataStore (final List<SayingObject> newSayings) {
+        // first find all sayings in data store that are not new
+        ParseQuery<SayingObject> query = SayingObject.getQuery();
+        query.fromLocalDatastore();
+        // just find ones that are not new in case new ones haven't finished saving eventually yet
+        query.whereEqualTo("IsNew", false);
+        query.findInBackground(new FindCallback<SayingObject>() {
+            public void done(final List<SayingObject> sayings, ParseException e) {
+                if (e == null) {
+                    SayingObject.unpinAllInBackground(sayings, new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            pinNewSayings(newSayings);
+                        }
+                    });
+                } else {
+                    Log.i(TAG, "Error removing old pins" + e.getMessage());
+                }
+            }
+        });
+    }
+
+
+
+    private void pinNewSayings(List<SayingObject> sayings) {
+        // pinning updated list to local data store
+        Log.d(TAG, "pinning updated list to local data store");
+        SayingObject.pinAllInBackground(sayings, new SaveCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    if (!isFinishing()) {
+                        // load the objects into the list view
+                        mSayingListAdapter.loadObjects();
+                    }
+                } else {
+                    Log.i(TAG, "Error pinning sayings: " + e.getMessage());
+                }
+            }
+        });
+    }
+
+
+    // GENERAL METHODS
+    public void toastUser(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void openAddSayingToEditItem(SayingObject object) {
+        Intent intent = new Intent(this, AddSayingActivity.class);
+        // pass along the object id
+        String idString = object.getObjectId();
+        intent.putExtra("SayingId", idString);
+        startActivityForResult(intent, EDIT_SAYING_INTENT);
+
+    }
+
+    private void reloadSayingsList() {
+        mSayingListAdapter.loadObjects();
     }
 
 

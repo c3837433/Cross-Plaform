@@ -23,5 +23,6 @@
 #define aChildSaying @"ChildSaying"
 #define aChildSayingDate @"SayingDate"
 #define aSayingClass @"Saying"
+#define aIsNew @"IsNew"
 
 @end

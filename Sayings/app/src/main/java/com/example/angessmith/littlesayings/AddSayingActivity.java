@@ -117,6 +117,7 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
         thisSaying.setSaying(saying);
         thisSaying.setAge(age);
         thisSaying.setChild(name);
+        thisSaying.setNew(true);
         // Format the date
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         Date newDate = convertToDateObject(sdf, date);
@@ -137,7 +138,7 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
                     }
                 });
     }
-    public void savePinnedSaying(SayingObject saying) {
+    public void savePinnedSaying(final SayingObject saying) {
         // check our connection
         NetworkChecker networkChecker = new NetworkChecker(this);
         boolean connected = networkChecker.networkAvailable();
@@ -149,6 +150,9 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
                     if (e == null) {
                         Log.d(TAG, "Saved in background");
                         // return to the list
+                        // Update the isnew
+                        saying.setNew(false);
+                        saying.saveInBackground();
                         returnToListView(true);
                     } else {
                         Log.d(TAG, "Error saving in background");

@@ -86,8 +86,7 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
         try {
             mListener = (AddSayingButtonListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement AddSayingButtonListener");
+            throw new ClassCastException(activity.toString() + " must implement AddSayingButtonListener");
         }
     }
 

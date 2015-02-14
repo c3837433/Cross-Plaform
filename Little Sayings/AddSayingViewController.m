@@ -111,6 +111,7 @@
         newSaying[aChildAge] = @(age);
         newSaying[aChildSaying] = saying;
         newSaying[aChildSayingDate] = sayingDate;
+        newSaying[aIsNew] = @YES;
         // also add the parent to the saying so the parse cloud code can check for updates
         newSaying[@"Parent"] = [PFUser currentUser];
 
@@ -121,6 +122,9 @@
             // See if we have any errors
             if (succeeded) {
                 NSLog(@"Save successful!");
+                // change is new
+                newSaying[aIsNew] = @NO;
+                [newSaying saveInBackground];
                 // clear out cells, move user back to list, and update the list
                 [self clearAndReturnUser];
             } else {
