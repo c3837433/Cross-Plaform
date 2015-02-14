@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dk_teal"
+    android:padding="20dp">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/name_view"
+                android:layout_marginBottom="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Child's Name: "
+                    android:gravity="center"
+                    android:textSize="20dp"
+                    android:textColor="#ffffff"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords|textPersonName"
+                    android:theme="@android:style/Theme.Holo"
+                    android:ems="10"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffe9e9e9"
+                    android:selectAllOnFocus="false"
+                    android:id="@+id/edit_name"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="15dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/age_view"
+                android:layout_marginBottom="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Child's Age: "
+                    android:gravity="center"
+                    android:textSize="20dp"
+                    android:textColor="#ffffff"/>
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:id="@+id/edit_age"
+                    android:theme="@android:style/Theme.Holo"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffe9e9e9"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/date_view"
+                android:layout_marginBottom="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Original Date: "
+                    android:gravity="center"
+                    android:textSize="20dp"
+                    android:textColor="#ffffff"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
+                    android:id="@+id/edit_date_view"
+                    android:hint="02/03/2015"
+                    android:textSize="18sp"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffe9e9e9"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_my_calendar"
+                    android:id="@+id/edit_get_date_button"
+                    android:background="@null"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/saying_view"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Saying: "
+                    android:gravity="center"
+                    android:textSize="20dp"
+                    android:textColor="#ffffff"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Child's saying..."
+                    android:id="@+id/edit_saying"
+                    android:layout_marginTop="20dp"
+                    android:theme="@android:style/Theme.Holo"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffe9e9e9"
+                    android:selectAllOnFocus="false"
+                    android:inputType="textMultiLine|textCapSentences|textLongMessage" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="50dp"
+            android:background="@color/dk_blue">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update Saying"
+                android:textColor="@color/white"
+                android:id="@+id/update_saying_button"
+                android:layout_centerHorizontal="true"
+                android:textSize="18sp"
+                android:background="@null"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

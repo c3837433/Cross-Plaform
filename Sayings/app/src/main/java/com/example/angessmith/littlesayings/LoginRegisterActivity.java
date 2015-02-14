@@ -5,6 +5,7 @@ package com.example.angessmith.littlesayings;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,10 +28,14 @@ import java.util.regex.Pattern;
 public class LoginRegisterActivity extends Activity implements LoginFragment.OnFragmentButtonClickListener, RegisterFragment.OnRegisterFragmentButtonListener  {
 
     public static final String TAG = "LoginRegisterActivity.TAG";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
+
+        // Check login
+        checkForCurrentUser();
         // Set up logo font
         TextView titleTextView = (TextView) findViewById(R.id.login_logo_title);
         Typeface face = Typeface.createFromAsset(getAssets(),"fonts/giddyup.otf");
@@ -39,6 +44,19 @@ public class LoginRegisterActivity extends Activity implements LoginFragment.OnF
         //set up the fragment to display the log in option to the user
         LoginFragment loginFragment = LoginFragment.newInstance();
         getFragmentManager().beginTransaction().replace(R.id.login_register_container, loginFragment, LoginFragment.TAG).commit();
+    }
+
+
+    // Check for current user
+    private void checkForCurrentUser() {
+            // See if we are logged in
+            final ParseUser currentUser = ParseUser.getCurrentUser();
+            if (currentUser != null) {
+                // user is logged in, move to saying list
+                Log.i(TAG, "User logged in");
+                // load list view
+                openMainList();
+            }
     }
 
 
@@ -57,7 +75,8 @@ public class LoginRegisterActivity extends Activity implements LoginFragment.OnF
                     public void done(ParseUser user, ParseException e) {
                         if (e == null && user != null) {
                             // We are logged in, return to the launch activity
-                            finish();
+                            //finish();
+                            openMainList();
                         } else {
                             // If there is an error, alert the user
                             if (e != null) {
@@ -177,6 +196,11 @@ public class LoginRegisterActivity extends Activity implements LoginFragment.OnF
         // save whenever we can
         user.saveEventually();
         // return to the launch screen
-        finish();
+        //finish();
+        openMainList();
+    }
+    private void openMainList() {
+        Intent loggedInIntent = new Intent(this, SayingListActivity.class);
+        startActivity(loggedInIntent);
     }
 }

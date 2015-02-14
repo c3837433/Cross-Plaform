@@ -12,15 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.angessmith.littlesayings.Fragment.AddSayingFragment;
 import com.example.angessmith.littlesayings.Fragment.DateDialogFragment;
+import com.example.angessmith.littlesayings.Fragment.EditSayingFragment;
 import com.example.angessmith.littlesayings.ParseClass.SayingObject;
 import com.parse.GetCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -29,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class AddSayingActivity extends ActionBarActivity implements AddSayingFragment.AddSayingButtonListener, DatePickerDialog.OnDateSetListener {
+public class AddSayingActivity extends ActionBarActivity implements AddSayingFragment.AddSayingButtonListener, DatePickerDialog.OnDateSetListener, EditSayingFragment.EditSayingButtonListener {
 
     public static final String TAG = "AddSayingActivity.TAG";
     public TextView mDateTextView;
@@ -39,19 +38,18 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_saying);
 
-        String objectID = null;
-        // if this is an edit of a current item,get the id and change the title bar
+
+        // if this is an edit of a current item, get the object id
         if (getIntent().hasExtra("SayingId")) {
-            objectID = getIntent().getExtras().getString("SayingId");
-            // update the action bar
-            getSupportActionBar().setTitle("Edit Saying");
+            String objectID = getIntent().getExtras().getString("SayingId");
+            // and open the edit fragment
+            EditSayingFragment editSayingFragment = EditSayingFragment.newInstance(objectID);
+            getFragmentManager().beginTransaction().replace(R.id.add_saying_container, editSayingFragment, EditSayingFragment.TAG).commit();
+        } else {
+            // this is a new instance, set up the add saying fragment
+            AddSayingFragment addSayingFragment = AddSayingFragment.newInstance();
+            getFragmentManager().beginTransaction().replace(R.id.add_saying_container, addSayingFragment, AddSayingFragment.TAG).commit();
         }
-
-        // set up the add saying fragment
-        AddSayingFragment addSayingFragment = AddSayingFragment.newInstance(objectID);
-        getFragmentManager().beginTransaction().replace(R.id.add_saying_container, addSayingFragment, AddSayingFragment.TAG).commit();
-
-
     }
 
     @Override
@@ -77,91 +75,107 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
     }
 
 
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
-        int month = monthOfYear +1;// Error handling with current calendar
-        String dateInString = dayOfMonth + "-" + month + "-" + year;
-        String dateForView = month + "/" + dayOfMonth + "/" + year;
-        Date date = convertToDateObject(sdf, dateInString);
-        Log.d(TAG, "Date set: " + date);
-        // Update the text view
-        mDateTextView.setText(dateForView);
-    }
-
-    private Date convertToDateObject(SimpleDateFormat sdf, String dateInString) {
-        Date date = null;
-        try {
-            date = sdf.parse(dateInString);
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
-
 
     // ADD SAYING BUTTON INTERFACE LISTENERS
+    // PREPARE FOR NEW SAYING OBJECT
     @Override
-    public void gatherEnteredData(String sayingId, final String name, final Integer age, final String saying, final String date) {
-        Log.d(TAG, "User entered name: " + name + " age: " + age + " saying: " + saying + " on date: " + date);
-
-        // Make sure we at least have a saying
-        if (saying.length() != 0) {
-            if (sayingId != null) {
-                // this is old, search for it
-                ParseQuery<SayingObject> query = SayingObject.getQuery();
-                // get the saying
-                query.getInBackground(sayingId, new GetCallback<SayingObject>() {
-                    public void done(SayingObject sayingObject, ParseException e) {
-                        if (e == null) {
-                            Log.d(TAG, "Retrieved object for update");
-                            saveSaying(sayingObject, name, saying, age, date);
-                        }
-                    }
-                });
-            } else  {
-                // Save what we have from the user
-                SayingObject newSaying = new SayingObject();
-                Log.d(TAG, "Preparing new saying");
-                newSaying.put("Parent",ParseUser.getCurrentUser());
-                // set the permission
-                newSaying.setACL(new ParseACL(ParseUser.getCurrentUser()));
-                saveSaying(newSaying, name, saying, age, date);
-
-            }
-
-        } else {
-            // No saying
-            toastUser("Whoops! We need a saying to save.");
-        }
-
+    public void gatherEnteredData(String name, Integer age, String saying, String date) {
+        // Create the new object
+        // Save what we have from the user
+        SayingObject newSaying = new SayingObject();
+        Log.d(TAG, "Preparing new saying");
+        newSaying.put("Parent",ParseUser.getCurrentUser());
+        // set the permission
+        newSaying.setACL(new ParseACL(ParseUser.getCurrentUser()));
+        // save this saying
+        saveSaying(newSaying, name, saying, age, date);
     }
 
-    public void saveSaying(SayingObject thisSaying, String name, String saying, Integer age, String date ) {
-        Log.d(TAG, "Saving object");
-        thisSaying.setSaying(saying);
-        thisSaying.setAge(age);
-        thisSaying.setChild(name);
-        SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy");
-        Date newDate = convertToDateObject(sdf, date);
-        thisSaying.setDate(newDate);
-        // Save this saying
-        thisSaying.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
+    // SAVE UPDATED SAYING
+    @Override
+    public void gatherUpdatedData(String sayingID, final String name, final Integer age, final String saying, final String date) {
+        // Data was already verified, get this object from the data store to update it
+        ParseQuery<SayingObject> query = SayingObject.getQuery();
+        query.fromLocalDatastore();
+        // get the saying
+        query.getInBackground(sayingID, new GetCallback<SayingObject>() {
+            public void done(SayingObject sayingObject, ParseException e) {
                 if (e == null) {
-                    // return to the list view
-                    Log.d(TAG, "Saying saved!");
-                    returnToListView();
-                } else {
-                    Log.d(TAG, "Problem saving: " + e.getCode());
-                    toastUser("We had a problem saving this saying. Please try again later.");
+                    Log.d(TAG, "Retrieved object for update");
+                    // save the saying
+                    saveSaying(sayingObject, name, saying, age, date);
                 }
-
             }
         });
 
     }
+
+    // SAVE SAYING OBJECT
+    public void saveSaying(final SayingObject thisSaying, String name, String saying, Integer age, String date ) {
+        Log.d(TAG, "Saving object");
+        // Set the main values for this object
+        thisSaying.setSaying(saying);
+        thisSaying.setAge(age);
+        thisSaying.setChild(name);
+        // Format the date
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        Date newDate = convertToDateObject(sdf, date);
+        thisSaying.setDate(newDate);
+        // pin it to the local data store
+        thisSaying.pinInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (isFinishing()) {
+                            return;
+                        }
+                        if (e == null) {
+                            // save the object
+                            savePinnedSaying(thisSaying);
+                        } else {
+                            Log.d(TAG, "Error pinning: " + e.getMessage());
+                        }
+                    }
+                });
+    }
+    public void savePinnedSaying(SayingObject saying) {
+        // check our connection
+        NetworkChecker networkChecker = new NetworkChecker(this);
+        boolean connected = networkChecker.networkAvailable();
+        if (connected) {
+            // save now
+            saying.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Log.d(TAG, "Saved in background");
+                        // return to the list
+                        returnToListView(true);
+                    } else {
+                        Log.d(TAG, "Error saving in background");
+                    }
+                }
+            });
+        } else {
+            // save when we can
+            saying.saveEventually();
+            returnToListView(false);
+        }
+
+    }
+
+    public void returnToListView(Boolean saved) {
+        Intent returnIntent = new Intent();
+        if (saved) {
+            setResult(RESULT_OK, returnIntent);
+        } else {
+            // use first user key for no save
+            setResult(RESULT_FIRST_USER, returnIntent);
+        }
+        finish();
+    }
+
+
+    // DATE METHODS
     @Override
     public void getDate(TextView textView) {
         // set the text view so we can update the date after the user changes it
@@ -171,13 +185,26 @@ public class AddSayingActivity extends ActionBarActivity implements AddSayingFra
         dateDialogFragment.show(getFragmentManager(), DateDialogFragment.TAG);
     }
 
-    public void toastUser(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    // SET THE DATE IN THE VIEW WHEN RETURNING FROM DATE PICKER
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        // Adjust the month
+        int month = monthOfYear +1;// Error handling with current calendar
+        // set it as a string
+        String dateForView = month + "/" + dayOfMonth + "/" + year;
+        // Update the text view
+        mDateTextView.setText(dateForView);
     }
 
-    public void returnToListView() {
-        Intent returnIntent = new Intent();
-        setResult(RESULT_OK, returnIntent);
-        finish();
+    private Date convertToDateObject(SimpleDateFormat sdf, String dateInString) {
+        Date date = null;
+        try {
+            // try to parse the date string and return it
+            date = sdf.parse(dateInString);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
+
 }

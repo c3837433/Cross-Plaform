@@ -3,6 +3,7 @@ package com.example.angessmith.littlesayings.Fragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.angessmith.littlesayings.ParseClass.SayingObject;
 import com.example.angessmith.littlesayings.R;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 
 import java.util.Calendar;
 
@@ -31,20 +28,12 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
     private EditText mAgeView;
     private EditText mSayingView;
     private TextView mDateView;
-    private String mSayingId;
-    private SayingObject mSayingObject;
 
     // Define the listener interface
     private AddSayingButtonListener mListener;
 
-    public static AddSayingFragment newInstance(String id) {
-        AddSayingFragment fragment = new AddSayingFragment();
-        if (id != null) {
-            Log.d(TAG,  "Saying id retrieved to edit");
-            fragment.mSayingId = id;
-        }
-         return fragment;
-        //return new AddSayingFragment();
+    public static AddSayingFragment newInstance() {
+        return new AddSayingFragment();
     }
 
     public AddSayingFragment() {
@@ -86,29 +75,6 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
         // set the date in the textview
         mDateView.setText(date);
 
-
-        // see if new or old
-        if (mSayingId !=  null) {
-            // old item, update the button text
-            saveButton.setText("Update Saying");
-            // and get the object
-            ParseQuery<SayingObject> query = SayingObject.getQuery();
-            query.whereEqualTo("objectId", mSayingId);
-            query.getFirstInBackground(new GetCallback<SayingObject>() {
-
-                @Override
-                public void done(SayingObject saying, ParseException e) {
-                    if (e == null) {
-                        mSayingObject = saying;
-                        mNameView.setText(saying.getChild());
-                        Number age = saying.getAge();
-                        mAgeView.setText("Age " + age);
-                        mSayingView.setText(saying.getSaying());
-                        mDateView.setText(saying.getSayingDate().toString());
-                    }
-                }
-            });
-        }
       // return the view
         return view;
 
@@ -137,8 +103,13 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.speaker_save_saying:
                 // get the number entered in the age edit text view
-                Integer age = Integer.parseInt(mAgeView.getText().toString());
-                mListener.gatherEnteredData(mSayingId, mNameView.getText().toString(), age, mSayingView.getText().toString(), mDateView.getText().toString());
+                // verify the values
+                //Integer age;
+                Boolean verifiedData = verifyEnteredData();
+                if (verifiedData) {
+                    Log.d(TAG, "All data good!");
+                    mListener.gatherEnteredData(mNameView.getText().toString(), Integer.parseInt(mAgeView.getText().toString()), mSayingView.getText().toString(), mDateView.getText().toString());
+                }
                 break;
             case R.id.speaker_get_date:
                 mListener.getDate(mDateView);
@@ -148,8 +119,35 @@ public class AddSayingFragment extends Fragment implements View.OnClickListener 
 
     public interface AddSayingButtonListener {
         // button methods
-        public void gatherEnteredData(String sayingID, String name, Integer age, String saying, String date);
+        public void gatherEnteredData(String name, Integer age, String saying, String date);
         public void getDate(TextView textView);
+    }
+
+    public Boolean verifyEnteredData() {
+        Boolean fieldsVerified = true;
+        // Check the name
+        if(TextUtils.isEmpty(mNameView.getText().toString())) {
+            mNameView.setError("Please enter a name.");
+             return false;
+        }
+       if (TextUtils.isEmpty(mAgeView.getText().toString())) {
+            mAgeView.setError("Please enter an age.");
+            return  false;
+        } else {
+           // get the age
+           Integer age = Integer.parseInt(mAgeView.getText().toString());
+           if ((age < 1) || (age > 120)) {
+               mAgeView.setError("Please enter a valid age.");
+               return  false;
+           }
+       }
+
+       if (TextUtils.isEmpty(mSayingView.getText().toString())) {
+            mSayingView.setError("Please enter a saying.");
+            fieldsVerified = false;
+        }
+        return fieldsVerified;
+
     }
 
 }

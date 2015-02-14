@@ -8,6 +8,11 @@
         android:title="Add Saying"
         app:showAsAction="always"/>
 
+    <item android:id="@+id/action_sync_saying"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:title="Sync"
+        app:showAsAction="always"/>
+
     <item android:id="@+id/action_logout_user"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
         android:title="Log Out"
