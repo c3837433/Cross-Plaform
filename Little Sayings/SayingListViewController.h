@@ -9,8 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "ParseUI/ParseUI.h"
 #import "DetailViewController.h"
+#import "Reachability.h"
 
 @interface SayingListViewController : PFQueryTableViewController <DetailViewControllerDelegate>
 
+@property (nonatomic)  BOOL needToSync;
+@property (nonatomic) BOOL isServerReachable;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem* addBtn;
+@property (nonatomic, strong) NSTimer* syncCheckTimer;
+@property (nonatomic) int networkStatus;
 
+
+-(void) syncOnUpdate;
 @end

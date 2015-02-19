@@ -14,14 +14,14 @@
 @end
 
 @implementation AppDelegate
-
+@synthesize networkStatus;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
     // [Optional] Power your app with Local Datastore. For more info, go to
     // https://parse.com/docs/ios_guide#localdatastore/iOS
-   // [Parse enableLocalDatastore];
+    //[Parse enableLocalDatastore];
     
     // Initialize Parse.
     [Parse setApplicationId:@"N2wRnfGDdmtURsVA4IZfgXU5UdjREkHbQepbwxBv"
@@ -32,9 +32,37 @@
     
     UIBarButtonItem *barButtonAppearance = [UIBarButtonItem appearance];
     [barButtonAppearance setTintColor:[UIColor whiteColor]];
+    
+    // start monitering the network connection
+    [self checkReachability];
     return YES;
 }
 
+- (void)checkReachability {
+    // set up the notificaiton
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChanged:)
+                                                 name:kReachabilityChangedNotification
+                                               object:nil];
+    // listen for internet access
+    self.internetReachability = [Reachability reachabilityForInternetConnection];
+    // get the current status
+    networkStatus = self.internetReachability.currentReachabilityStatus;
+    // start notifying the user
+    [self.internetReachability startNotifier];
+}
+
+// update the status when it changes
+- (void) reachabilityChanged:(NSNotification *)note {
+    // get the current status
+    Reachability* curReach = [note object];
+    networkStatus = [curReach currentReachabilityStatus];
+}
+
+// access the current state within the other views
+- (BOOL)networkAvailable {
+    return networkStatus != NotReachable;
+}
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.

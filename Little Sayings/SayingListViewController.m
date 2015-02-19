@@ -7,11 +7,15 @@
 //
 
 #import "SayingListViewController.h"
+#import "AddSayingViewController.h"
+#import "Reachability.h"
 #import <Parse/Parse.h>
+#import <ParseUI/ParseUI.h>
 #import "SayingCell.h"
+#import "AppDelegate.h"
 
 @implementation SayingListViewController
-
+@synthesize needToSync, syncCheckTimer, networkStatus;
 
 #pragma mark - PARSE PFQUERY TABLEVIEW METHODS
 // INIT FOR STORYBOARD
@@ -33,16 +37,22 @@
 - (PFQuery *)queryForTable {
     // Get all stories available for this current user
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
-    [query setLimit:0];
     [query orderByDescending:@"createdAt"];
+    [query setCachePolicy:kPFCachePolicyNetworkOnly];
+
+    // If there is no network connection, we will hit the cache first.
+    if (self.objects.count == 0 || ![[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)]) {
+        [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
+    }
     return query;
 }
 
 // PREPARE FOR EMPTY TABLE VIEW
-- (void)objectsDidLoad:(NSError *)error
-{
+- (void)objectsDidLoad:(NSError *)error {
+
     [super objectsDidLoad:error];
     if (self.objects.count == 0) {
+        NSLog(@"there are: %ld objects loaded", self.objects.count);
         // Display a message when the table is empty
         UIImageView* messageImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
         messageImage.image = [UIImage imageNamed:@"noSaying"];
@@ -138,6 +148,9 @@
 #pragma mark - Segue Methods
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UIButton*)sender
 {
+    // stop timer
+    
+    
     if ([segue.identifier isEqualToString:@"segueToDetail"])
     {
         // Get this saying
@@ -147,8 +160,18 @@
         DetailViewController* detailVC = segue.destinationViewController;
         detailVC.delegate = self;
         detailVC.thisSaying = saying;
+    } else if ([segue.identifier isEqualToString:@"segueToAdd"]) {
+        // set the controller so we can handle the completion block
+        AddSayingViewController* addSayingVC = segue.destinationViewController;
+        [addSayingVC setSayingListController:self];
     }
 }
+
+-(void) syncOnUpdate {
+    NSLog(@"New saying will sync when network connection resumes");
+    needToSync = true;
+}
+
 
 #pragma VIEW CONTROLLER METHODS
 -(void) viewWillAppear:(BOOL)animated {
@@ -158,7 +181,81 @@
 
 - (void)viewDidLoad
 {
+    UIBarButtonItem* syncBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(syncDataWithParse)];
+    
+    // create the two buttons
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:syncBtn, self.addBtn, nil];
+    // register the reciever
+    // set up the notificaiton
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChanged:)
+                                                 name:kReachabilityChangedNotification
+                                               object:nil];
+    // start timer
+    [self startSyncTimer];
     [super viewDidLoad];
+}
+
+
+- (void) reachabilityChanged:(NSNotification *)note {
+    // get the current status
+    Reachability* curReach = [note object];
+    networkStatus = [curReach currentReachabilityStatus];
+    switch (networkStatus) {
+        case NotReachable:        {
+            NSLog(@"Parse not reachable");
+            // stop timer
+            [self stopTimer];
+            break;
+        }
+        case ReachableViaWWAN:        {
+            NSLog(@"Accessing Parse via wwan");
+            // start timer
+            [self startSyncTimer];
+            break;
+        }
+        case ReachableViaWiFi:        {
+            NSLog(@"Accessing Parse via wifi");
+            // start timer
+            [self startSyncTimer];
+            break;
+        }
+    }
+}
+-(void) stopTimer {
+    NSLog(@"Stopping Timer");
+    [syncCheckTimer invalidate];
+}
+-(void)startSyncTimer {
+    NSLog(@"Starting timer");
+    syncCheckTimer = [NSTimer scheduledTimerWithTimeInterval:20.0f target:self selector:@selector(verifyConnection) userInfo:nil repeats:YES];
+}
+
+-(void)verifyConnection {
+    NSLog(@"Checking connection");
+    // Check if we have a connection
+    if ([[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)]) {
+        // sync with parse
+        NSLog(@"Loading data");
+        [self loadObjects];
+    }
+
+}
+
+-(void)syncDataWithParse {
+    // Check if we have a connection
+    if ([[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)]) {
+        //
+        [self loadObjects];
+    } else {
+        // Alert user data will sync when network connection resumes
+        [self alertUserWithTitle:@"No Network Connection" message:@"Sayings will sync when network connection resumes."];
+    }
+}
+
+-(void)alertUserWithTitle:(NSString*)title message:(NSString*)message {
+    // Display alert to user
+    [[[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 }
 
 - (void)didReceiveMemoryWarning

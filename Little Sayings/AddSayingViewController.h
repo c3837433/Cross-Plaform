@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SayingListViewController.h"
 
 @interface AddSayingViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate>
 
@@ -14,6 +15,8 @@
 @property (nonatomic, strong) IBOutlet UITextField* childAgeView;
 @property (nonatomic, strong) IBOutlet UITextField* childSayingDateView;
 @property (nonatomic, strong) IBOutlet UITextView* childSayingView;
+
+@property (nonatomic, strong) SayingListViewController* sayingListController;
 
 -(void)updateDateLabelWithNewDate:(id)sender;
 

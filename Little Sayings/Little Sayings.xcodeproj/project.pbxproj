@@ -32,6 +32,7 @@
 		0EA6CFDE1A82CA6E0029B10F /* SayingListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFDD1A82CA6E0029B10F /* SayingListViewController.m */; };
 		0EA6CFE11A82CBCE0029B10F /* SayingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFE01A82CBCE0029B10F /* SayingCell.m */; };
 		0EA6CFE41A82E0EF0029B10F /* AddSayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6CFE31A82E0EF0029B10F /* AddSayingViewController.m */; };
+		993A23C21A950D670094BDE3 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 993A23C11A950D670094BDE3 /* Reachability.m */; };
 		995686841A89D44900F7EA7D /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 995686831A89D44900F7EA7D /* DetailViewController.m */; };
 		99D3A2791A87EF6A00B83616 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99D3A2781A87EF6A00B83616 /* ParseUI.framework */; };
 /* End PBXBuildFile section */
@@ -83,6 +84,8 @@
 		0EA6CFE01A82CBCE0029B10F /* SayingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SayingCell.m; sourceTree = "<group>"; };
 		0EA6CFE21A82E0EF0029B10F /* AddSayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddSayingViewController.h; sourceTree = "<group>"; };
 		0EA6CFE31A82E0EF0029B10F /* AddSayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddSayingViewController.m; sourceTree = "<group>"; };
+		993A23C01A950D670094BDE3 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		993A23C11A950D670094BDE3 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		995686821A89D44900F7EA7D /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		995686831A89D44900F7EA7D /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		99D3A2781A87EF6A00B83616 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "../../../Dropbox/Parse/parse-library-1.6.2/ParseUI.framework"; sourceTree = "<group>"; };
@@ -123,6 +126,7 @@
 		0EA6CF7F1A82AE520029B10F = {
 			isa = PBXGroup;
 			children = (
+				993A23C81A954FEC0094BDE3 /* Reachability */,
 				0EA6CFE61A8332120029B10F /* Saying List */,
 				0EA6CFE51A8309420029B10F /* Add Saying */,
 				9987C1781A8A9A2C00555A88 /* Detail and Edit Views */,
@@ -234,6 +238,15 @@
 				0EA6CFE01A82CBCE0029B10F /* SayingCell.m */,
 			);
 			name = "Saying List";
+			sourceTree = "<group>";
+		};
+		993A23C81A954FEC0094BDE3 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				993A23C01A950D670094BDE3 /* Reachability.h */,
+				993A23C11A950D670094BDE3 /* Reachability.m */,
+			);
+			name = Reachability;
 			sourceTree = "<group>";
 		};
 		9987C1781A8A9A2C00555A88 /* Detail and Edit Views */ = {
@@ -349,6 +362,7 @@
 				0EA6CFD51A82B6B70029B10F /* SignUpViewController.m in Sources */,
 				995686841A89D44900F7EA7D /* DetailViewController.m in Sources */,
 				0EA6CFE11A82CBCE0029B10F /* SayingCell.m in Sources */,
+				993A23C21A950D670094BDE3 /* Reachability.m in Sources */,
 				0EA6CFE41A82E0EF0029B10F /* AddSayingViewController.m in Sources */,
 				0EA6CFDE1A82CA6E0029B10F /* SayingListViewController.m in Sources */,
 				0EA6CF911A82AE550029B10F /* AppDelegate.m in Sources */,

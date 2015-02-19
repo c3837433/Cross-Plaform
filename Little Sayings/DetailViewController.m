@@ -8,7 +8,7 @@
 
 #import "DetailViewController.h"
 #import <QuartzCore/QuartzCore.h> 
-
+#import "AppDelegate.h"
 
 @interface DetailViewController ()
 
@@ -115,15 +115,8 @@
     [editView setHidden:[editView isHidden]];
     [editView setHidden:![editView isHidden]];
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+
 
 #pragma mark - Change Views
 -(void)updateEditOrDisplayViews:(UIButton*)button
@@ -178,8 +171,9 @@
 }
 -(IBAction)onUpdate:(UIButton*)button {
     // Get this class object
+    // Check our network connection
+    BOOL networkStatus = [[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)];
     PFQuery *query = [PFQuery queryWithClassName:aSayingClass];
-    
     // and this saying object
     [query getObjectInBackgroundWithId:[thisSaying objectId] block:^(PFObject* saying, NSError *error) {
         // Only update what was changed

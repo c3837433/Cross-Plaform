@@ -28,6 +28,9 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     // Once views are ready, check to see if user is logged in, if they are view list otherwise lig in screen
+ //   PFUser *currentUser = [PFUser currentUser];
+    
+ //   if (!currentUser) {
     ![PFUser currentUser] ? ([self presentLogInView]) : ([self presentMainSayingView]);
 
 }

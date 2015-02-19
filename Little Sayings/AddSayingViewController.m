@@ -7,8 +7,10 @@
 //
 
 #import "AddSayingViewController.h"
+#import "Reachability.h"
 #import <QuartzCore/QuartzCore.h> 
 #import <Parse/Parse.h>
+#import "AppDelegate.h"
 
 @interface AddSayingViewController ()
 
@@ -114,29 +116,41 @@
         newSaying[aIsNew] = @YES;
         // also add the parent to the saying so the parse cloud code can check for updates
         newSaying[@"Parent"] = [PFUser currentUser];
-
+        // pin this saying to the local data store
+        [newSaying pinInBackground];
         // set read/write permission to current user
         newSaying.ACL = [PFACL ACLWithUser:[PFUser currentUser]];
-        // FInally, save this saying
-        [newSaying saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            // See if we have any errors
-            if (succeeded) {
-                NSLog(@"Save successful!");
-                // change is new
-                newSaying[aIsNew] = @NO;
-                [newSaying saveInBackground];
-                // clear out cells, move user back to list, and update the list
-                [self clearAndReturnUser];
-            } else {
-                if ([error code] == kPFErrorConnectionFailed) {
-                    // Alert user we are unable to connect to parse
-                    [self alertUserWithTitle:@"Unable to access server" message:@"Please try again later."];
-                } else if (error) {
-                    NSLog(@"Error: %@", [error userInfo][@"error"]);
-                    [self alertUserWithTitle:@"Problem Saving" message:@"Please try again later"];
+        // Check our network connection
+        BOOL networkStatus = [[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)];
+        if (networkStatus == NotReachable) {
+            NSLog(@"No internet connection, saving eventually");
+            // Finally, save this saying
+            [newSaying saveEventually];
+            [self clearAndReturnToSync];
+        } else {
+            NSLog(@"Have access to network, saving now");
+            // Finally, save this saying
+            [newSaying saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                // See if we have any errors
+                if (succeeded) {
+                    NSLog(@"Save successful!");
+                    // change is new
+                    newSaying[aIsNew] = @NO;
+                    [newSaying saveInBackground];
+                    // clear out cells, move user back to list, and update the list
+                    [self clearAndReturnUser];
+                } else {
+                    if ([error code] == kPFErrorConnectionFailed) {
+                        // Alert user we are unable to connect to parse
+                        [self alertUserWithTitle:@"Unable to access server" message:@"Please try again later."];
+                    } else if (error) {
+                        NSLog(@"Error: %@", [error userInfo][@"error"]);
+                        [self alertUserWithTitle:@"Problem Saving" message:@"Please try again later"];
+                    }
                 }
-            }
-        }];
+            }];
+
+        }
         
     } else {
         // alert the user we need a saying
@@ -144,7 +158,18 @@
     }
 
 }
-
+-(void)clearAndReturnToSync {
+    // Clear out the cells
+    childNameView.text = @"";
+    childAgeView.text = @"";
+    childSayingView.text = @"";
+    // reset the date
+    childSayingDateView.text = [self getCurrentDate];
+    // Return to list view
+    [self dismissViewControllerAnimated:NO completion:^{
+        [self.sayingListController syncOnUpdate];
+    }];
+}
 -(void)clearAndReturnUser{
     // Clear out the cells
     childNameView.text = @"";
@@ -154,7 +179,6 @@
     childSayingDateView.text = [self getCurrentDate];
     // Return to list view
     [self dismissViewControllerAnimated:NO completion:nil];
-
 }
 
 -(void)alertUserWithTitle:(NSString*)title message:(NSString*)message {
