@@ -50,6 +50,9 @@
     networkStatus = self.internetReachability.currentReachabilityStatus;
     // start notifying the user
     [self.internetReachability startNotifier];
+    // get the current status
+    BOOL canAccess = [self networkAvailable];
+    NSLog(canAccess ? @"Have Network Connection" : @"No network connection found");
 }
 
 // update the status when it changes

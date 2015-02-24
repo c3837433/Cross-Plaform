@@ -11,14 +11,19 @@
 #import "DetailViewController.h"
 #import "Reachability.h"
 
-@interface SayingListViewController : PFQueryTableViewController <DetailViewControllerDelegate>
+@interface SayingListViewController : PFQueryTableViewController <DetailViewControllerDelegate> {
 
-@property (nonatomic)  BOOL needToSync;
+    UIBarButtonItem* syncBtn;
+
+}
+
 @property (nonatomic) BOOL isServerReachable;
 @property (nonatomic, strong) IBOutlet UIBarButtonItem* addBtn;
 @property (nonatomic, strong) NSTimer* syncCheckTimer;
 @property (nonatomic) int networkStatus;
 
 
--(void) syncOnUpdate;
+@property (nonatomic, strong) SayingListViewController* sayingListController;
+
+-(void)startSyncTimer;
 @end

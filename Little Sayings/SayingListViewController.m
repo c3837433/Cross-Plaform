@@ -15,7 +15,7 @@
 #import "AppDelegate.h"
 
 @implementation SayingListViewController
-@synthesize needToSync, syncCheckTimer, networkStatus;
+@synthesize syncCheckTimer, networkStatus;
 
 #pragma mark - PARSE PFQUERY TABLEVIEW METHODS
 // INIT FOR STORYBOARD
@@ -38,11 +38,14 @@
     // Get all stories available for this current user
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
     [query orderByDescending:@"createdAt"];
-    [query setCachePolicy:kPFCachePolicyNetworkOnly];
+    [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
 
     // If there is no network connection, we will hit the cache first.
-    if (self.objects.count == 0 || ![[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)]) {
+    BOOL hasConnection = [[[UIApplication sharedApplication] delegate] performSelector:@selector(networkAvailable)];
+    if (!hasConnection) {
+        NSLog(@"No connection found, querying from cache");
         [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
+        syncBtn.enabled = NO;
     }
     return query;
 }
@@ -65,10 +68,8 @@
 #pragma TABLEVIEW METHODS
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object
 {
-    
     // Get the saying cell
     SayingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"sayingCell"];
-    //SayingCell* cell = [tableView dequeueReusableCellWithIdentifier:@"sayingCell" forIndexPath:indexPath];
     if (cell != nil)
     {
         // Set the saying to the cell
@@ -76,19 +77,22 @@
         [cell setSaying:saying];
     }
     return cell;
-    
 }
 
 // DELETE ITEM IN TABLEVIEW
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         PFObject* thisSaying = [self.objects objectAtIndex:indexPath.row];
-        [thisSaying deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (succeeded) {
-                // reload objects
-                [self loadObjects];
-            }
-        }];
+        if (syncBtn.enabled) {
+            [thisSaying deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    // reload objects
+                    [self loadObjects];
+                }
+            }];
+        } else {
+            [self alertUserWithTitle:@"No Network" message:@"Try deleting when network resumes"];
+        }
     }
 }
 
@@ -140,6 +144,10 @@
 - (IBAction)logOutUser:(id)sender {
     // Log user out of Parse
     [PFUser logOut];
+    // stop timer
+    [self stopTimer];
+    // stop receiving notifications
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
     // Return to launch
     [self dismissViewControllerAnimated:NO completion:nil];
 }
@@ -149,7 +157,7 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UIButton*)sender
 {
     // stop timer
-    
+    [self stopTimer];
     
     if ([segue.identifier isEqualToString:@"segueToDetail"])
     {
@@ -160,16 +168,12 @@
         DetailViewController* detailVC = segue.destinationViewController;
         detailVC.delegate = self;
         detailVC.thisSaying = saying;
-    } else if ([segue.identifier isEqualToString:@"segueToAdd"]) {
+    }  else if ([segue.identifier isEqualToString:@"segueToAdd"]) {
         // set the controller so we can handle the completion block
         AddSayingViewController* addSayingVC = segue.destinationViewController;
         [addSayingVC setSayingListController:self];
     }
-}
 
--(void) syncOnUpdate {
-    NSLog(@"New saying will sync when network connection resumes");
-    needToSync = true;
 }
 
 
@@ -177,11 +181,13 @@
 -(void) viewWillAppear:(BOOL)animated {
     // Set alll navigation text to white
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    // start timer
+    [self startSyncTimer];
 }
 
 - (void)viewDidLoad
 {
-    UIBarButtonItem* syncBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(syncDataWithParse)];
+    syncBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(syncDataWithParse)];
     
     // create the two buttons
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:syncBtn, self.addBtn, nil];
@@ -191,10 +197,14 @@
                                              selector:@selector(reachabilityChanged:)
                                                  name:kReachabilityChangedNotification
                                                object:nil];
-    // start timer
-    [self startSyncTimer];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(startSyncTimer)
+                                                 name:UIApplicationWillEnterForegroundNotification object:nil];
+    
     [super viewDidLoad];
 }
+
 
 
 - (void) reachabilityChanged:(NSNotification *)note {
@@ -204,6 +214,9 @@
     switch (networkStatus) {
         case NotReachable:        {
             NSLog(@"Parse not reachable");
+            self.isServerReachable = false;
+            syncBtn.enabled = NO;
+            [self alertUserWithTitle:@"Lost Network Connection" message:nil];
             // stop timer
             [self stopTimer];
             break;
@@ -211,13 +224,17 @@
         case ReachableViaWWAN:        {
             NSLog(@"Accessing Parse via wwan");
             // start timer
+            self.isServerReachable = true;
             [self startSyncTimer];
+            syncBtn.enabled = YES;
             break;
         }
         case ReachableViaWiFi:        {
             NSLog(@"Accessing Parse via wifi");
             // start timer
             [self startSyncTimer];
+            self.isServerReachable = true;
+            syncBtn.enabled = YES;
             break;
         }
     }
@@ -243,14 +260,7 @@
 }
 
 -(void)syncDataWithParse {
-    // Check if we have a connection
-    if ([[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)]) {
-        //
-        [self loadObjects];
-    } else {
-        // Alert user data will sync when network connection resumes
-        [self alertUserWithTitle:@"No Network Connection" message:@"Sayings will sync when network connection resumes."];
-    }
+    [self loadObjects];
 }
 
 -(void)alertUserWithTitle:(NSString*)title message:(NSString*)message {

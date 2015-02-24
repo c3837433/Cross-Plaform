@@ -37,32 +37,48 @@
         [self alertUserWithTitle:@"Passwords don't match" message:@"Please try again."];
     } else {
         // Make sure the the fields are not blandk
-        if (([email isEqual:@""]) || ([password isEqual:@""])) {
+        if ((![email isEqual:@""]) && (![password isEqual:@""])) {
+            // Check email validation
+            if ([self validateEmail:email]) {
+                // we can sign up this user
+                // Attempt to sign up
+                PFUser* newUser = [PFUser user];
+                newUser.username = email;
+                newUser.password = password;
+                // add email for verification
+                newUser.email = email;
+                [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        // set permission and return to launch
+                        [self setPermissionAndReturnToLaunch];
+                    } else if (error) {
+                        // check if code 101
+                        if (error.code == 101) {
+                            // This user is already registered
+                            [self alertUserWithTitle:@"Already Registered" message:@"This email has already been registered."];
+                        } else {
+                            [self alertUserWithTitle:@"Unable to Register" message:@"Please try again later."];
+                        }
+                    }
+                }];
+            } else {
+                // Invalid email
+                // Alert user we need both values
+                [self alertUserWithTitle:@"Invalid Email Address" message:nil];
+            }
+        } else {
+            //
             // Alert user we need both values
             [self alertUserWithTitle:@"Missing Info" message:@"Please make sure all fields are filled in."];
-        } else {
-            // Attempt to log user in
-            PFUser* newUser = [PFUser user];
-            newUser.username = email;
-            newUser.password = password;
-            // add email for verification
-            newUser.email = email;
-            [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    // set permission and return to launch
-                    [self setPermissionAndReturnToLaunch];
-                } else if (error) {
-                    // check if code 101
-                    if (error.code == 101) {
-                        // This user is already registered
-                        [self alertUserWithTitle:@"Already Registered" message:@"This email has already been registered."];
-                    } else {
-                         [self alertUserWithTitle:@"Unable to Register" message:@"Please try again later."];
-                    }
-                }
-            }];
         }
     }
+}
+
+- (BOOL)validateEmail:(NSString*)email
+{
+    NSString* regexString = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regexString];
+    return [predicate evaluateWithObject:email];
 }
 
 -(void)alertUserWithTitle:(NSString*)title message:(NSString*)message {

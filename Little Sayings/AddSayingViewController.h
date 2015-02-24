@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SayingListViewController.h"
 
-@interface AddSayingViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate>
+@interface AddSayingViewController : UIViewController <UITextFieldDelegate>
 
 @property (nonatomic, strong) IBOutlet UITextField* childNameView;
 @property (nonatomic, strong) IBOutlet UITextField* childAgeView;

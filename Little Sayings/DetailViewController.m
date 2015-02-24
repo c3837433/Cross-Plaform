@@ -19,6 +19,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    BOOL networkAvailable = [[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)];
+    if (!networkAvailable) {
+        // alert user right away
+        [self alertUserWithTitle:@"No Network Connection Found" message:@"Changes can not be saved until network connection resumes."];
+    }
     // Set up the buttons so the user can switch to edit mode for this item
     editSayingButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(updateEditOrDisplayViews:)];
     editSayingButton.tag = 1;
@@ -172,7 +178,8 @@
 -(IBAction)onUpdate:(UIButton*)button {
     // Get this class object
     // Check our network connection
-    BOOL networkStatus = [[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)];
+    BOOL networkAvailable = [[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)];
+    NSLog(networkAvailable ? @"Network available, save now" : @"No network connection save eventually");
     PFQuery *query = [PFQuery queryWithClassName:aSayingClass];
     // and this saying object
     [query getObjectInBackgroundWithId:[thisSaying objectId] block:^(PFObject* saying, NSError *error) {
@@ -202,15 +209,35 @@
             NSLog(@"Updating saying");
             saying[aChildSaying] = editSayingView.text;
         }
-        [saying saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            // check for success
-            if (succeeded) {
-                // reset the booleans and hide the buttons
-                [self resetChangeValuesForSaying:saying];
-            }
-        }];
+        if (networkAvailable) {
+            NSLog(@"saving now");
+            // save now
+            [saying saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                // check for success
+                if (succeeded) {
+                    // reset the booleans and hide the buttons
+                    [self resetChangeValuesForSaying:saying];
+                }
+            }];
+        } else {
+            [self alertUserWithTitle:@"No Network" message:@"Tryu updating saying when network resumes"];
+        }
         
     }];
+}
+
+
+-(void) resetAndReturnToList {
+    changedName = NO;
+    changedAge = NO;
+    changedDate = NO;
+    changedSaying = NO;
+    // hide the button
+    updateSayingButton.hidden = YES;
+    [[[UIAlertView alloc] initWithTitle:@"No network connection" message:@"This saying will save and update when network connection resumes." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    // Return to list view
+    [self dismissViewControllerAnimated:NO completion:nil];
+
 }
 -(void)resetChangeValuesForSaying:(PFObject*)updatedSaying {
     changedName = NO;
@@ -228,6 +255,10 @@
     [self.delegate viewDetailsView:self didUpdateSaying:YES];
 }
 
+-(void)alertUserWithTitle:(NSString*)title message:(NSString*)message {
+    // Display alert to user
+    [[[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+}
 
 
 @end

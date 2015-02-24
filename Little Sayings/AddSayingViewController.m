@@ -97,64 +97,67 @@
         // Gather the remaining
         // AGE
         NSInteger age = [childAgeView.text intValue];
-        
-        // DATE
-        NSString* dateString = childSayingDateView.text;
-        // Create the formatter
-        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-        // and the format
-        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
-        NSDate* sayingDate = [dateFormatter dateFromString:dateString];
-        
-        // Create a new Parse Object
-        PFObject* newSaying = [PFObject objectWithClassName:aSayingClass];
-        // Set values
-        newSaying[aChildName] = name;
-        newSaying[aChildAge] = @(age);
-        newSaying[aChildSaying] = saying;
-        newSaying[aChildSayingDate] = sayingDate;
-        newSaying[aIsNew] = @YES;
-        // also add the parent to the saying so the parse cloud code can check for updates
-        newSaying[@"Parent"] = [PFUser currentUser];
-        // pin this saying to the local data store
-        [newSaying pinInBackground];
-        // set read/write permission to current user
-        newSaying.ACL = [PFACL ACLWithUser:[PFUser currentUser]];
-        // Check our network connection
-        BOOL networkStatus = [[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)];
-        if (networkStatus == NotReachable) {
-            NSLog(@"No internet connection, saving eventually");
-            // Finally, save this saying
-            [newSaying saveEventually];
-            [self clearAndReturnToSync];
-        } else {
-            NSLog(@"Have access to network, saving now");
-            // Finally, save this saying
-            [newSaying saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                // See if we have any errors
-                if (succeeded) {
-                    NSLog(@"Save successful!");
-                    // change is new
-                    newSaying[aIsNew] = @NO;
-                    [newSaying saveInBackground];
-                    // clear out cells, move user back to list, and update the list
-                    [self clearAndReturnUser];
-                } else {
-                    if ([error code] == kPFErrorConnectionFailed) {
-                        // Alert user we are unable to connect to parse
-                        [self alertUserWithTitle:@"Unable to access server" message:@"Please try again later."];
-                    } else if (error) {
-                        NSLog(@"Error: %@", [error userInfo][@"error"]);
-                        [self alertUserWithTitle:@"Problem Saving" message:@"Please try again later"];
+        if ((age > 0 )&& (age < 121)) {
+            // DATE
+            NSString* dateString = childSayingDateView.text;
+            // Create the formatter
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            // and the format
+            [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+            NSDate* sayingDate = [dateFormatter dateFromString:dateString];
+            
+            // Create a new Parse Object
+            PFObject* newSaying = [PFObject objectWithClassName:aSayingClass];
+            // Set values
+            newSaying[aChildName] = name;
+            newSaying[aChildAge] = @(age);
+            newSaying[aChildSaying] = saying;
+            newSaying[aChildSayingDate] = sayingDate;
+            newSaying[aIsNew] = @YES;
+            // also add the parent to the saying so the parse cloud code can check for updates
+            newSaying[@"Parent"] = [PFUser currentUser];
+            // set read/write permission to current user
+            newSaying.ACL = [PFACL ACLWithUser:[PFUser currentUser]];
+            // Check our network connection
+            BOOL networkStatus = [[UIApplication sharedApplication].delegate performSelector:@selector(networkAvailable)];
+            if (networkStatus == NotReachable) {
+                NSLog(@"No internet connection, saving eventually");
+                // Finally, save this saying
+                [newSaying saveEventually];
+                [self clearAndReturnUser];
+            } else {
+                NSLog(@"Have access to network, saving now");
+                // Finally, save this saying
+                [newSaying saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    // See if we have any errors
+                    if (succeeded) {
+                        NSLog(@"Save successful!");
+                        // change is new
+                        newSaying[aIsNew] = @NO;
+                        [newSaying saveInBackground];
+                        // clear out cells, move user back to list, and update the list
+                        // [self clearAndReturnToSync];
+                        [self clearAndReturnUser];
+                    } else {
+                        if ([error code] == kPFErrorConnectionFailed) {
+                            // Alert user we are unable to connect to parse
+                            [self alertUserWithTitle:@"Unable to access server" message:@"Please try again later."];
+                        } else if (error) {
+                            NSLog(@"Error: %@", [error userInfo][@"error"]);
+                            [self alertUserWithTitle:@"Problem Saving" message:@"Please try again later"];
+                        }
                     }
-                }
-            }];
-
+                }];
+                
+            }
+        } else {
+            // alert the user we need a saying
+            [self alertUserWithTitle:nil message:@"Please enter a valid age."];
         }
         
     } else {
         // alert the user we need a saying
-        [self alertUserWithTitle:@"Missing field" message:@"Both a name and saying are required."];
+        [self alertUserWithTitle:nil message:@"Both a name and saying are required."];
     }
 
 }
@@ -166,10 +169,11 @@
     // reset the date
     childSayingDateView.text = [self getCurrentDate];
     // Return to list view
-    [self dismissViewControllerAnimated:NO completion:^{
-        [self.sayingListController syncOnUpdate];
-    }];
+ //   [self dismissViewControllerAnimated:NO completion:^{
+   //     [self.sayingListController startSyncTimer];
+    //}];
 }
+
 -(void)clearAndReturnUser{
     // Clear out the cells
     childNameView.text = @"";
